@@ -19,37 +19,25 @@ import android.widget.Toast;
 
 
 public class LoginActivity extends Activity {
-    EditText user;
-    EditText pass;
-    Button submit;
-    TextView tv;
-    ImageView im;
+    private LinearLayout ll;
+    private LinearLayout.LayoutParams lparams;
+    private EditText user;
+    private EditText pass;
+    private Button submit;
+    private TextView tv;
+    private ImageView im;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        lparams.gravity = Gravity.CENTER_HORIZONTAL;
+        inflateViews();
 
-        LinearLayout ll = new LinearLayout(this);
-        ll.setOrientation(LinearLayout.VERTICAL);
+        this.setContentView(ll);
+    }
 
-        im = new ImageView(this);
-        im.setImageDrawable(getResources().getDrawable(R.drawable.logo));
-        tv = new TextView(this);
-        tv.setText("Learning Object Player");
-        tv.setGravity(Gravity.CENTER_HORIZONTAL);
 
-        user = new EditText(this);
-        user.setHint("Username");
-        user.setGravity(Gravity.CENTER_HORIZONTAL);
-        user.setCompoundDrawablesWithIntrinsicBounds(R.drawable.user, 0 ,0 ,0);
-
-        pass = new EditText(this);
-        pass.setHint("Password");
-        pass.setGravity(Gravity.CENTER_HORIZONTAL);
-        pass.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0 ,0 ,0);
-
+    //creates submit button
+    public void createSbmtButton(){
         submit = new Button(this);
         submit.setLayoutParams(lparams);
         submit.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -66,15 +54,7 @@ public class LoginActivity extends Activity {
                 }
             }
         });
-
-        ll.addView(im);
-        ll.addView(user);
-        ll.addView(pass);
-        ll.addView(submit);
-
-        this.setContentView(ll);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -96,5 +76,49 @@ public class LoginActivity extends Activity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    //this inflates the views dynamically into the activity
+    public boolean inflateViews(){
+        boolean flag = false;
+        try {
+            //create layout params for views
+            lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+            lparams.gravity = Gravity.CENTER_HORIZONTAL;
+
+            //for layout
+            ll = new LinearLayout(this);
+            ll.setOrientation(LinearLayout.VERTICAL);
+
+            //for logo
+            im = new ImageView(this);
+            im.setImageDrawable(getResources().getDrawable(R.drawable.logo));
+            tv = new TextView(this);
+            tv.setText("Learning Object Player");
+            tv.setGravity(Gravity.CENTER_HORIZONTAL);
+
+            //for username text area
+            user = new EditText(this);
+            user.setHint("Username");
+            user.setGravity(Gravity.CENTER_HORIZONTAL);
+            user.setCompoundDrawablesWithIntrinsicBounds(R.drawable.user, 0, 0, 0);
+
+            //for password text area
+            pass = new EditText(this);
+            pass.setHint("Password");
+            pass.setGravity(Gravity.CENTER_HORIZONTAL);
+            pass.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, 0, 0);
+
+            createSbmtButton();
+
+            ll.addView(im);
+            ll.addView(user);
+            ll.addView(pass);
+            ll.addView(submit);
+
+            flag = true;
+
+        }catch(Exception e){}
+        return flag;
     }
 }

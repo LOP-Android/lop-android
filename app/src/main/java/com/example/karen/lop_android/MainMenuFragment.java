@@ -16,8 +16,10 @@ import android.widget.Toast;
  * Created by Karen on 8/20/2015.
  */
 public class MainMenuFragment extends Fragment {
-    View rootView;
-    String[] sample_list = {
+    private View rootView;
+    private LinearLayout ll;
+    private ListView lv;
+    private String[] sample_list = {
             "My Library",
             "LO Store",
             "Favorites",
@@ -30,9 +32,10 @@ public class MainMenuFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.main_menu_layout, container, false);
 
-        LinearLayout ll = new LinearLayout(getActivity());
+        ll = new LinearLayout(getActivity());
         ll.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
-        ListView lv = new ListView(getActivity());
+
+        lv = new ListView(getActivity());
         lv.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT));
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, sample_list);
         lv.setAdapter(adapter);

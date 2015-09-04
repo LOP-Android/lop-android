@@ -23,11 +23,13 @@ import java.util.ArrayList;
  * Created by Karen on 8/21/2015.
  */
 public class MyLibraryFragment extends Fragment {
-    View rootView;
-    EditText searchBar;
-    ListView lv;
-    Animation anim;
-    String[] loList = {
+    private LinearLayout.LayoutParams lparams;
+    private View rootView;
+    private EditText searchBar;
+    private ListView lv;
+    private Animation anim;
+    private LinearLayout ll;
+    private String[] loList = {
             "Algebra",
             "Calculus",
             "Physics II",
@@ -41,14 +43,20 @@ public class MyLibraryFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.base_layout, container, false);
 
+        inflateViews();
+
+        return rootView;
+    }
+
+
+    public void inflateViews(){
+
         anim = AnimationUtils.loadAnimation(getActivity(),android.R.anim.slide_out_right);
         anim.setDuration(500);
 
-
-        LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lv = new ListView(getActivity());
-        searchBar = new EditText(getActivity());
-        searchBar.setHint("Search for LOs");
+
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, loList);
         lv.setAdapter(adapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -58,7 +66,10 @@ public class MyLibraryFragment extends Fragment {
             }
         });
 
-        LinearLayout ll = new LinearLayout(getActivity());
+        searchBar = new EditText(getActivity());
+        searchBar.setHint("Search for LOs");
+
+        ll = new LinearLayout(getActivity());
         ll.setLayoutParams(lparams);
         ll.setOrientation(LinearLayout.VERTICAL);
         ll.addView(searchBar);
@@ -86,8 +97,6 @@ public class MyLibraryFragment extends Fragment {
 
         });
 
-
         rootView = ll;
-        return rootView;
     }
 }

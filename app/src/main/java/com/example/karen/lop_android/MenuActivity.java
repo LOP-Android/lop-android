@@ -1,6 +1,7 @@
 package com.example.karen.lop_android;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -15,12 +16,15 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Stack;
 
 
 public class MenuActivity extends ActionBarActivity {
-    Fragment currentFrag;
-    public MainMenuFragment mmf = new MainMenuFragment();
-    ListView lv;
+    private Fragment currentFrag;
+    private MainMenuFragment mmf = new MainMenuFragment();
+    private ListView lv;
+    private int fragRemoved = 0;
+
     String[] sample_list = {
             "My Library",
             "LO Store",
@@ -45,26 +49,27 @@ public class MenuActivity extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 switch (position) {
-                    case 0:
-                        currentFrag = new MyLibraryFragment();
-                        replaceFragment(currentFrag);
-                        break;
-                    case 1:
-                        currentFrag = new StoreFragment();
-                        replaceFragment(currentFrag);
-                        break;
-                    case 5:
-                        currentFrag = new AboutFragment();
-                        replaceFragment(currentFrag);
-                        break;
+                    case 0:currentFrag = new MyLibraryFragment();
+                        replaceFragment(currentFrag);break;
+                    case 1:currentFrag = new StoreFragment();
+                        replaceFragment(currentFrag);break;
+                    case 5:currentFrag = new AboutFragment();
+                        replaceFragment(currentFrag);break;
                 }
+                fragRemoved = 0;
             }
         });
     }
 
     @Override
     public void onBackPressed() {
-        removeFragment(currentFrag);
+        if(fragRemoved == 1){
+            Intent intent = new Intent(MenuActivity.this, LoginActivity.class);
+            startActivity(intent);
+        }
+        else {
+            removeFragment(currentFrag);
+        }
     }
 
     public void removeFragment(Fragment fragment){
@@ -73,6 +78,7 @@ public class MenuActivity extends ActionBarActivity {
                 .remove(fragment)
                 .commit();
         lv.setVisibility(View.VISIBLE);
+        fragRemoved = 1;
     }
 
     public void replaceFragment(Fragment fragment){
