@@ -1,6 +1,7 @@
 package com.example.karen.lop_android;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
@@ -18,7 +19,11 @@ import android.widget.Toast;
 
 
 public class LoginActivity extends Activity {
-
+    EditText user;
+    EditText pass;
+    Button submit;
+    TextView tv;
+    ImageView im;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,21 +34,23 @@ public class LoginActivity extends Activity {
         LinearLayout ll = new LinearLayout(this);
         ll.setOrientation(LinearLayout.VERTICAL);
 
-        ImageView im = new ImageView(this);
+        im = new ImageView(this);
         im.setImageDrawable(getResources().getDrawable(R.drawable.logo));
-        TextView tv = new TextView(this);
+        tv = new TextView(this);
         tv.setText("Learning Object Player");
         tv.setGravity(Gravity.CENTER_HORIZONTAL);
-        EditText user = new EditText(this);
+
+        user = new EditText(this);
         user.setHint("Username");
         user.setGravity(Gravity.CENTER_HORIZONTAL);
         user.setCompoundDrawablesWithIntrinsicBounds(R.drawable.user, 0 ,0 ,0);
-        EditText pass = new EditText(this);
+
+        pass = new EditText(this);
         pass.setHint("Password");
         pass.setGravity(Gravity.CENTER_HORIZONTAL);
         pass.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0 ,0 ,0);
 
-        Button submit = new Button(this);
+        submit = new Button(this);
         submit.setLayoutParams(lparams);
         submit.setGravity(Gravity.CENTER_HORIZONTAL);
         submit.setText("Submit");
@@ -51,7 +58,12 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
-                startActivity(intent);
+                if(user.getText().toString().equals("admin") && pass.getText().toString().equals("admin")) {
+                    startActivity(intent);
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Error: Incorrect username/password", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
