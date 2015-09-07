@@ -27,6 +27,7 @@ public class LoginActivity extends Activity {
     private Button jsontest;
     private TextView tv;
     private ImageView im;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

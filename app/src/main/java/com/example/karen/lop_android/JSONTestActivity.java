@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,10 +29,12 @@ public class JSONTestActivity extends ActionBarActivity {
     TextView id;
     TextView name;
     TextView mmr;
+    TextView pValue;
     Button b;
     String test = null;
     JSONObject strRoot;
     JSONArray arr;
+    ProgressBar pbar;
     private ProgressDialog pdia;
 
 
@@ -43,7 +46,9 @@ public class JSONTestActivity extends ActionBarActivity {
         id = (TextView) findViewById(R.id.id);
         name = (TextView) findViewById(R.id.name);
         mmr = (TextView) findViewById(R.id.mmr);
+        pValue = (TextView) findViewById(R.id.progressValue);
         b = (Button) findViewById(R.id.get);
+        pbar = (ProgressBar) findViewById(R.id.progressBar);
 
         //display json data
         b.setOnClickListener(new View.OnClickListener() {
@@ -81,18 +86,25 @@ public class JSONTestActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    private class JSONParseTask extends AsyncTask<String,String,JSONObject>{
+    private class JSONParseTask extends AsyncTask<String,Integer,JSONObject>{
         private boolean finished = false;
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            pbar.setProgress(values[0]);
+            pValue.setText(values[0]+"%");
+        }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-
-            pdia = new ProgressDialog(JSONTestActivity.this);
+            pValue.setVisibility(View.VISIBLE);
+            /*pdia = new ProgressDialog(JSONTestActivity.this);
             pdia.setMessage("Fetching data from ");
             pdia.setIndeterminate(false);
             pdia.setCancelable(true);
-            pdia.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            pdia.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);*/
 
             //pdia.show();
         }
@@ -102,8 +114,20 @@ public class JSONTestActivity extends ActionBarActivity {
             return getJSONFromURL();
         }
 
+        public void startProgressBar(){
+            try {
+                for (int i = 0; i <= 100; i++) {
+                    Thread.sleep(50);
+                    publishProgress(i);
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
         @Override
         protected void onPostExecute(JSONObject jsonObject) {
+            pValue.setVisibility(View.INVISIBLE);
             if(jsonObject!=null) {
                 id.setText("Name: " + jsonObject.optString("name"));
                 name.setText("ID: " + jsonObject.optString("id"));
@@ -136,7 +160,7 @@ public class JSONTestActivity extends ActionBarActivity {
             catch (IOException e) {e.printStackTrace();}
             catch (JSONException e) {e.printStackTrace();}
 
-
+            startProgressBar();
             return strRoot;
         }
     }

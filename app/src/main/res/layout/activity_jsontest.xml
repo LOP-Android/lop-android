@@ -37,4 +37,25 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true" />
 
+    <ProgressBar
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/progressBar"
+        style="@android:style/Widget.Holo.ProgressBar.Horizontal"
+        android:max="100"
+        android:layout_below="@+id/name"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="40dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:visibility="invisible"
+        android:id="@+id/progressValue"
+        android:layout_below="@+id/progressBar"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
 </RelativeLayout>
