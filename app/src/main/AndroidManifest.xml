@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.karen.lop_android" >
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:allowBackup="true"
@@ -19,6 +20,10 @@
         <activity
             android:name=".MenuActivity"
             android:label="@string/title" >
+        </activity>
+        <activity
+            android:name=".JSONTestActivity"
+            android:label="@string/title_activity_jsontest" >
         </activity>
     </application>
 

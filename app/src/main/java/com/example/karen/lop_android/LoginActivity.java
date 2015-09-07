@@ -24,6 +24,7 @@ public class LoginActivity extends Activity {
     private EditText user;
     private EditText pass;
     private Button submit;
+    private Button jsontest;
     private TextView tv;
     private ImageView im;
     @Override
@@ -52,6 +53,19 @@ public class LoginActivity extends Activity {
                 else{
                     Toast.makeText(getApplicationContext(), "Error: Incorrect username/password", Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+
+        //create the json test button
+        jsontest = new Button(this);
+        jsontest.setLayoutParams(lparams);
+        jsontest.setGravity(Gravity.CENTER_HORIZONTAL);
+        jsontest.setText("go to json test activity");
+        jsontest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, JSONTestActivity.class);
+                startActivity(intent);
             }
         });
     }
@@ -115,6 +129,8 @@ public class LoginActivity extends Activity {
             ll.addView(user);
             ll.addView(pass);
             ll.addView(submit);
+            ll.addView(jsontest);
+
 
             flag = true;
 
