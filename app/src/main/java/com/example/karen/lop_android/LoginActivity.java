@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -27,6 +28,7 @@ public class LoginActivity extends Activity {
     private Button jsontest;
     private TextView tv;
     private ImageView im;
+    private TextView register;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,9 @@ public class LoginActivity extends Activity {
                 startActivity(intent);
             }
         });
+
+
+
     }
 
     @Override
@@ -124,6 +129,27 @@ public class LoginActivity extends Activity {
             pass.setGravity(Gravity.CENTER_HORIZONTAL);
             pass.setCompoundDrawablesWithIntrinsicBounds(R.drawable.lock, 0, 0, 0);
 
+
+            /*
+            Creates a TextView
+            Sets it to Clickable
+            Opens to another activity
+             */
+            register = new TextView(this);
+            register.setHint("Register");
+            register.setPaintFlags(register.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+            register.setGravity(Gravity.CENTER_HORIZONTAL);
+            register.setClickable(true);
+            register.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(getApplicationContext(),"Working Link0", Toast.LENGTH_LONG).show();
+                }
+            });
+
+
+
+
             createSbmtButton();
 
             ll.addView(im);
@@ -131,7 +157,7 @@ public class LoginActivity extends Activity {
             ll.addView(pass);
             ll.addView(submit);
             ll.addView(jsontest);
-
+            ll.addView(register);
 
             flag = true;
 
