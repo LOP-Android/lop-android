@@ -143,7 +143,8 @@ public class LoginActivity extends Activity {
             register.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getApplicationContext(),"Working Link0", Toast.LENGTH_LONG).show();
+                    Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                    startActivity(intent);
                 }
             });
 
