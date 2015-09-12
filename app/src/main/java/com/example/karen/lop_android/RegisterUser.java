@@ -1,5 +1,10 @@
 package com.example.karen.lop_android;
 
+import android.app.Activity;
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -38,22 +43,45 @@ private EditText firstName;
 private EditText lastName;
 private EditText email;
 private Button reg;
+private String ianSignUpURL = "http://192.168.1.52:8080/InformatronYX/informatron/user/signup";
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //inflate the views into the layout
+        inflateViews();
+
+        this.setContentView(ll);
+    }
+
+    private void initLayoutParams() {
         lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         lparams.gravity = Gravity.CENTER_HORIZONTAL;
+    }
+
+    private void inflateViews() {
+        initLayoutParams();
 
         ll = new LinearLayout(this);
-         this.setContentView(ll);
         ll.setOrientation(LinearLayout.VERTICAL);
 
-        //calling onRegister() method
-            onRegister();
-        //register button stores all the user input data
+        //call onRegister to create the views
+        onRegister();
+        //create register button and set onclick for post json
+        createRegistrBtn();
+
+        ll.addView(firstName);
+        ll.addView(lastName);
+        ll.addView(username);
+        ll.addView(password);
+        ll.addView(email);
+        ll.addView(reg);
+    }
+
+    //register button stores all the user input data
+    private void createRegistrBtn() {
         reg = new Button(this);
         reg.setLayoutParams(lparams);
         reg.setText("Submit");
@@ -63,98 +91,120 @@ private Button reg;
         reg.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getApplicationContext(),"Register Successfully! ", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "register data: " + POST(ianSignUpURL, getApplicationContext()), Toast.LENGTH_LONG).show();
 
             }
         });
-
-
-
-
-
-        ll.addView(firstName);
-        ll.addView(lastName);
-        ll.addView(username);
-        ll.addView(password);
-        ll.addView(email);
-        ll.addView(reg);
-
     }
 
-    public void onRegister(){
-
+    private void onRegister(){
 
         //user register Firstname
         firstName = new EditText(this);
+        firstName.setLayoutParams(lparams);
         firstName.setHint("FIRSTNAME");
         firstName.setTextSize(23);
         firstName.setGravity(Gravity.CENTER_HORIZONTAL);
 
         //user register lastname
         lastName = new EditText(this);
+        lastName.setLayoutParams(lparams);
         lastName.setHint("LASTNAME");
         lastName.setTextSize(23);
         lastName.setGravity(Gravity.CENTER_HORIZONTAL);
 
         //user register username
         username = new EditText(this);
+        username.setLayoutParams(lparams);
         username.setHint("USERNAME");
         username.setTextSize(23);
         username.setGravity(Gravity.CENTER_HORIZONTAL);
 
         //user register password
         password = new EditText(this);
+        password.setLayoutParams(lparams);
         password.setHint("PASSWORD");
         password.setTextSize(23);
         password.setGravity(Gravity.CENTER_HORIZONTAL);
 
         //user register email
         email = new EditText(this);
+        email.setLayoutParams(lparams);
         email.setHint("EMAIL");
         email.setTextSize(23);
         email.setGravity(Gravity.CENTER_HORIZONTAL);
     }
 
-    public String POST(String url){
-            InputStream inputStream = null;
-            String result = "";
-        try{
-            String json = "";
-            HttpClient httpClient = new DefaultHttpClient();
+    /**this is for posting json onto server
+     *
+     *
+     * references: http://hmkcode.com/android-send-json-data-to-server/
+     *
+     *
+    **/
+    public String POST(String url, Context ctx){
+        InputStream inputStream = null;
+        String result = "";
+        try {
+            // 1. create HttpClient
+            HttpClient httpclient = new DefaultHttpClient();
 
+            // 2. make POST request to the given URL
             HttpPost httpPost = new HttpPost(url);
-            JSONObject j = new JSONObject("");
-            j.put("firstName", firstName.getText());
-            j.put("lastName", lastName.getText());
-            j.put("username", username.getText());
-            j.put("password", password.getText());
-            j.put("email", email.getText());
 
-            //Convert JsonObject to String
-            json = j.toString();
-            //set Json to StringEntity
+            String json = "";
+
+            // 3. build jsonObject
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("username", username.getText());
+            jsonObject.put("password", password.getText());
+            jsonObject.put("firstName", firstName.getText());
+            jsonObject.put("lastName", lastName.getText());
+            jsonObject.put("email", email.getText());
+
+            // 4. convert JSONObject to JSON to String
+            json = jsonObject.toString();
+
+            // ** Alternative way to convert Person object to JSON string usin Jackson Lib
+            // ObjectMapper mapper = new ObjectMapper();
+            // json = mapper.writeValueAsString(person);
+
+            // 5. set json to StringEntity
             StringEntity se = new StringEntity(json);
-            //set HttpPost Entity
+
+            // 6. set httpPost Entity
             httpPost.setEntity(se);
 
+            // 7. Set some headers to inform server about the type of the content
             httpPost.setHeader("Accept", "application/json");
-            httpPost.setHeader("Content", "application/json");
+            httpPost.setHeader("Content-type", "application/json");
 
-            HttpResponse httpResponse = httpClient.execute(httpPost);
+            // 8. Execute POST request to the given URL
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+            StrictMode.setThreadPolicy(policy);
+            HttpResponse httpResponse = httpclient.execute(httpPost);
+
+            // 9. receive response as inputStream
             inputStream = httpResponse.getEntity().getContent();
+            result = convertInputStreamToString(inputStream);
 
-            if(inputStream != null)
-                result = convertInputStreamToString(inputStream);
-            else
+            // 10. convert inputstream to string
+            /*if(inputStream != null) {
+                Log.d("Input", "ni sud");
+                //result = convertInputStreamToString(inputStream);
+            }
+            else {
                 result = "Did not work!";
+            }*/
 
-        }catch(JSONException e){
-            e.printStackTrace();
-        }catch(Exception e){
-            e.printStackTrace();
+        } catch (Exception e) {
+            //e.printStackTrace();
+            Toast.makeText(ctx, "ni error"+e.toString(), Toast.LENGTH_LONG).show();
         }
 
-return result;
+        // 11. return result
+        return result;
     }
 
     private static String convertInputStreamToString(InputStream inputStream) throws IOException {
@@ -166,7 +216,15 @@ return result;
 
         inputStream.close();
         return result;
+    }
 
+    public boolean isConnected(){
+        ConnectivityManager connMgr = (ConnectivityManager) getSystemService(Activity.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected())
+            return true;
+        else
+            return false;
     }
 
 
