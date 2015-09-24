@@ -2,6 +2,7 @@ package com.example.karen.lop_android;
 
 import android.app.Fragment;
 import android.content.Intent;
+import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -13,6 +14,16 @@ import android.widget.ExpandableListView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -24,9 +35,14 @@ public class MenuActivity extends ActionBarActivity {
     private MainMenuFragment mmf = new MainMenuFragment();
     private ListView lv;
     private int fragRemoved = 0;
+    private String downloadLoURL = "http://192.168.1.43:8080/InformatronYX/informatron/LO/availableLearningObjects";
+    JSONObject strRoot;
+    JSONArray arr;
+    String test = null;
 
     String[] sample_list = {
             "My Library",
+            "Download LO",
             "LO Store",
             "Favorites",
             "Recent",
@@ -51,7 +67,18 @@ public class MenuActivity extends ActionBarActivity {
                 switch (position) {
                     case 0:currentFrag = new MyLibraryFragment();
                         replaceFragment(currentFrag);break;
-                    case 1:currentFrag = new StoreFragment();
+//                    case 1: currentFrag = new DownloadLOFragment();
+//                        replaceFragment(currentFrag);break;
+                    case 1: if(testDownloadJSONObject() != null){
+
+                            Toast.makeText(getApplicationContext(),testDownloadJSONObject().toString(),Toast.LENGTH_LONG).show();
+                        }
+                        else{
+                            Toast.makeText(getApplicationContext(),"FUCK U",Toast.LENGTH_LONG).show();
+
+                    }
+                        break;
+                    case 2:currentFrag = new StoreFragment();
                         replaceFragment(currentFrag);break;
                     case 5:currentFrag = new AboutFragment();
                         replaceFragment(currentFrag);break;
@@ -60,6 +87,35 @@ public class MenuActivity extends ActionBarActivity {
             }
         });
     }
+
+    public JSONObject testDownloadJSONObject(){
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        HttpResponse response;
+        HttpClient myClient = new DefaultHttpClient();
+        HttpPost myConnection = new HttpPost(downloadLoURL);
+
+
+        try {
+            response = myClient.execute(myConnection);
+            test = EntityUtils.toString(response.getEntity(), "UTF-8");
+            arr = new JSONArray(test);
+            strRoot = arr.getJSONObject(0);
+
+
+        }
+        catch (IOException e) {
+            Toast.makeText(getApplicationContext(),"FUCK U "+e.toString(),Toast.LENGTH_LONG).show();}
+        catch (JSONException e) {
+            Toast.makeText(getApplicationContext(),"FUCK U "+e.toString(),Toast.LENGTH_LONG).show();}
+
+        //startProgressBar();
+        return strRoot;
+    }
+
+
 
     @Override
     public void onBackPressed() {
