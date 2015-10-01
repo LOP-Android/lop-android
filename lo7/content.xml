@@ -1,0 +1,33 @@
+<Learning_Object>
+	<Title>Sample LO with SWF</Title>
+	<RootFolder></RootFolder>
+	<PageCount>3</PageCount>
+	
+	<Subject>Music</Subject>
+
+	<page>
+		<txt>texts2.txt</txt>
+		<ani>Catch-Game.swf</ani>
+		<txt>html2.html</txt>	
+		<ega>Catch-Game.swf</ega>	
+		<img caption="This is a caption for img2!">img2.jpg</img>
+		<cla>html2.html</cla>
+		<img caption="This is a caption for img1!">img1.jpg</img>	
+		<aud caption="This is a caption for audio page 1!!">Hillsong - Salvation Is Here.mp3</aud>	
+		<txt>texts.txt</txt>
+	</page>
+	<page>
+		<txt>texts.txt</txt>		
+		<img>img1.jpg</img>
+	</page>
+	<page>
+		<txt>texts2.txt</txt>
+		<img caption="This is a caption!!!!!!!!!!!">img2.jpg</img>	
+		<img>img1.jpg</img>
+		<aud caption="This is a caption for audio!!">Hillsong - Salvation Is Here.mp3</aud>
+		<txt>texts.txt</txt>
+	</page>
+	<page>
+		<vid caption="This is a caption for video!!">sample.mp4</vid>
+	</page>
+</Learning_Object>

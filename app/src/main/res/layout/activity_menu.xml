@@ -2,7 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/fragment_container"
-    tools:context="com.example.karen.lop_android.MenuActivity">
+    tools:context="com.example.karen.lop_android.MenuActivity"
+    android:background="@color/background_floating_material_light">
 
     <ListView
         android:layout_width="wrap_content"

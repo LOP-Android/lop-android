@@ -3,6 +3,7 @@ package com.example.karen.lop_android;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,26 +28,20 @@ import java.io.IOException;
 @SuppressWarnings("deprecation")
 public class JSONTestActivity extends ActionBarActivity {
     TextView id;
-    TextView user;
-    TextView pass;
-    TextView fname;
-    TextView lname;
-    TextView email;
-    TextView lastLogin;
-    TextView lastDownloadDate;
-    TextView lastDownloadId;
-    TextView liableLOs;
-    TextView token;
-    TextView approved;
-    TextView blocked;
-    TextView userType;
-    TextView guest;
-    TextView functionType;
+    TextView title;
+    TextView subject;
+    TextView description;
+    TextView downloads;
+    TextView uploadDate;
+    TextView likes;
+    TextView sequence;
+    TextView price;
+    TextView errorList;
 
     TextView pValue;
     Button b;
     String urlTest="http://demos.tricksofit.com/files/json.php";
-    String urlIan="http://192.168.1.52:8080/InformatronYX/informatron/test";
+    String urlIan="http://192.168.1.43:8080/InformatronYX/informatron/LO/availableLearningObjects";
     String test = null;
     JSONObject strRoot;
     JSONArray arr;
@@ -60,21 +55,15 @@ public class JSONTestActivity extends ActionBarActivity {
         setContentView(R.layout.activity_jsontest);
 
         id = (TextView) findViewById(R.id.id);
-        user = (TextView) findViewById(R.id.user);
-        pass = (TextView) findViewById(R.id.pass);
-        fname = (TextView) findViewById(R.id.fname);
-        lname = (TextView) findViewById(R.id.lname);
-        email = (TextView) findViewById(R.id.email);
-        lastLogin = (TextView) findViewById(R.id.last_login);
-        lastDownloadDate = (TextView) findViewById(R.id.last_download_date);
-        lastDownloadId = (TextView) findViewById(R.id.last_download_id);
-        liableLOs = (TextView) findViewById(R.id.liable_los);
-        token = (TextView) findViewById(R.id.token);
-        approved = (TextView) findViewById(R.id.approved);
-        blocked = (TextView) findViewById(R.id.blocked);
-        userType = (TextView) findViewById(R.id.user_type);
-        guest = (TextView) findViewById(R.id.guest);
-        functionType = (TextView) findViewById(R.id.function_type);
+        title = (TextView) findViewById(R.id.user);
+        subject = (TextView) findViewById(R.id.pass);
+        description = (TextView) findViewById(R.id.fname);
+        downloads = (TextView) findViewById(R.id.lname);
+        uploadDate = (TextView) findViewById(R.id.email);
+        likes = (TextView) findViewById(R.id.last_login);
+        sequence = (TextView) findViewById(R.id.last_download_date);
+        price = (TextView) findViewById(R.id.last_download_id);
+        errorList = (TextView) findViewById(R.id.liable_los);
 
         pValue = (TextView) findViewById(R.id.progressValue);
         b = (Button) findViewById(R.id.get);
@@ -86,11 +75,39 @@ public class JSONTestActivity extends ActionBarActivity {
             public void onClick(View v) {
                 //Toast.makeText(getApplicationContext(), (strRoot.toString()!=null)?strRoot.toString():"null", Toast.LENGTH_LONG).show();
 
-                Toast.makeText(getApplicationContext(), "fetching data from informatron..", Toast.LENGTH_SHORT).show();
-                new JSONParseTask().execute();
+                //Toast.makeText(getApplicationContext(), "fetching data from informatron..", Toast.LENGTH_SHORT).show();
+                //new JSONParseTask().execute();
+                Toast.makeText(getApplicationContext(), "hehe "+getJSONFromURL(), Toast.LENGTH_SHORT).show();
+
             }
         });
 
+    }
+    public JSONObject getJSONFromURL(){
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        HttpResponse response;
+        HttpClient myClient = new DefaultHttpClient();
+        HttpPost myConnection = new HttpPost(urlTest);
+
+        try {
+            response = myClient.execute(myConnection);
+            test = EntityUtils.toString(response.getEntity(), "UTF-8");
+            arr = new JSONArray(test);
+            strRoot = arr.getJSONObject(0);
+            //finished = true;
+
+        }
+        catch (IOException e) {
+            Toast.makeText(getApplicationContext(), "error1: "+e.toString(), Toast.LENGTH_LONG).show();
+        }
+        catch (JSONException e) {
+            Toast.makeText(getApplicationContext(), "error2: "+e.toString(), Toast.LENGTH_LONG).show();
+        }
+
+        //startProgressBar();
+        return strRoot;
     }
 
 
@@ -160,34 +177,28 @@ public class JSONTestActivity extends ActionBarActivity {
             pValue.setVisibility(View.INVISIBLE);
             Toast.makeText(getApplicationContext(), jsonObject.toString(), Toast.LENGTH_LONG).show();
                 //Toast.makeText(getApplicationContext(), jsonObject.toString(), Toast.LENGTH_LONG).show();
-                if (jsonObject != null) {
+                /*if (jsonObject != null) {
                     id.setText(((jsonObject.optInt("id") + "") != null) ?"id: " + jsonObject.optString("id") : "null");
-                user.setText(((jsonObject.optString("username"))!=null)?"username: " +jsonObject.optString("user"):"null");
-                pass.setText(((jsonObject.optString("password"))!=null)?"password: " +jsonObject.optString("pass"):"null");
-                fname.setText(((jsonObject.optString("firstName"))!=null)?"first name: " +jsonObject.optString("fname"):"null");
-                lname.setText(((jsonObject.optString("lastName"))!=null)?"last name: " +jsonObject.optString("lname"):"null");
-                email.setText(((jsonObject.optString("email"))!=null)?"email: " +jsonObject.optString("email"):"null");
-                lastLogin.setText(((jsonObject.optString("lastLogin"))!=null)?"last login: " +jsonObject.optString("lastLogin"):"null");
-                lastDownloadDate.setText(((jsonObject.optString("lastDownloadDate"))!=null)?"last download date: " +jsonObject.optString("lastDownloadDate"):"null");
-                lastDownloadId.setText(((jsonObject.optString("lastDownloadId"))!=null)?"last download id: " +jsonObject.optString("lastDownloadId"):"null");
-                liableLOs.setText(((jsonObject.optString("liableLearningObjects"))!=null)?"liable learning object: " +jsonObject.optString("liableLOs"):"null");
-                token.setText(((jsonObject.optString("token"))!=null)?"token: " +jsonObject.optString("token"):"null");
-                approved.setText(((jsonObject.optBoolean("approved")+"")!=null)?"approved: " +jsonObject.optString("approved"):"null");
-                blocked.setText(((jsonObject.optBoolean("blocked")+"")!=null)?"blocked: " +jsonObject.optString("blocked"):"null");
-                userType.setText(((jsonObject.optString("userType"))!=null)?"user type: " +jsonObject.optString("userType"):"null");
-                guest.setText(((jsonObject.optString("guest"))!=null)?"guest: " +jsonObject.optString("guest"):"null");
-                functionType.setText(((jsonObject.optInt("functionType")+"")!=null)?"function type: " +jsonObject.optString("functionType"):"null");
+                title.setText(((jsonObject.optString("title")) != null) ? "title: " + jsonObject.optString("title") : "null");
+                subject.setText(((jsonObject.optString("subject")) != null) ? "subject: " + jsonObject.optString("subject") : "null");
+                description.setText(((jsonObject.optString("description")) != null) ? "description: " + jsonObject.optString("description") : "null");
+                downloads.setText(((jsonObject.optString("downloads")) != null) ? "downloads: " + jsonObject.optString("downloads") : "null");
+                uploadDate.setText(((jsonObject.optString("uploadDate")) != null) ? "uploadDate: " + jsonObject.optString("uploadDate") : "null");
+                likes.setText(((jsonObject.optString("likes")) != null) ? "likes: " + jsonObject.optString("likes") : "null");
+                sequence.setText(((jsonObject.optString("sequence")) != null) ? "sequence: " + jsonObject.optString("sequence") : "null");
+                price.setText(((jsonObject.optString("price")) != null) ? "price " + jsonObject.optString("price") : "null");
+                errorList.setText(((jsonObject.optString("errorList")) != null) ? "errorList: " + jsonObject.optString("errorList") : "null");
                 } else {
                     Toast.makeText(getApplicationContext(), "json is null", Toast.LENGTH_LONG).show();
-                }
+                }*/
 
 
             Toast.makeText(getApplicationContext(), "done!", Toast.LENGTH_SHORT).show();
         }
 
         public JSONObject getJSONFromURL(){
-            //StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            //StrictMode.setThreadPolicy(policy);
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
 
             HttpResponse response;
             HttpClient myClient = new DefaultHttpClient();
@@ -201,8 +212,12 @@ public class JSONTestActivity extends ActionBarActivity {
                 finished = true;
 
             }
-            catch (IOException e) {e.printStackTrace();}
-            catch (JSONException e) {e.printStackTrace();}
+            catch (IOException e) {
+                Toast.makeText(getApplicationContext(), "error1: "+e.toString(), Toast.LENGTH_LONG).show();
+            }
+            catch (JSONException e) {
+                Toast.makeText(getApplicationContext(), "error2: "+e.toString(), Toast.LENGTH_LONG).show();
+            }
 
             startProgressBar();
             return strRoot;

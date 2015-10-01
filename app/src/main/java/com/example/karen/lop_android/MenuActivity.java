@@ -1,6 +1,7 @@
 package com.example.karen.lop_android;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
@@ -31,7 +32,9 @@ import java.util.Stack;
 
 
 public class MenuActivity extends ActionBarActivity {
-    private Fragment currentFrag;
+    public static Stack<Fragment> fragmentStack = new Stack<Fragment>();
+    public static FragmentManager fragmentManager;
+    public static Fragment currentFrag;
     private MainMenuFragment mmf = new MainMenuFragment();
     private ListView lv;
     private int fragRemoved = 0;
@@ -65,8 +68,7 @@ public class MenuActivity extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 switch (position) {
-                    case 0:currentFrag = new MyLibraryFragment();
-                        replaceFragment(currentFrag);break;
+                    case 0:addFragment(new MyLibraryFragment());break;
 //                    case 1: currentFrag = new DownloadLOFragment();
 //                        replaceFragment(currentFrag);break;
                     case 1: if(testDownloadJSONObject() != null){
@@ -78,10 +80,8 @@ public class MenuActivity extends ActionBarActivity {
 
                     }
                         break;
-                    case 2:currentFrag = new StoreFragment();
-                        replaceFragment(currentFrag);break;
-                    case 5:currentFrag = new AboutFragment();
-                        replaceFragment(currentFrag);break;
+                    case 2:addFragment(new StoreFragment());break;
+                    case 5:addFragment(new AboutFragment());break;
                 }
                 fragRemoved = 0;
             }
@@ -119,12 +119,13 @@ public class MenuActivity extends ActionBarActivity {
 
     @Override
     public void onBackPressed() {
-        if(fragRemoved == 1){
+        if(fragmentStack.empty()){
             Intent intent = new Intent(MenuActivity.this, LoginActivity.class);
             startActivity(intent);
         }
         else {
-            removeFragment(currentFrag);
+            removeFragment(fragmentStack.pop());
+            //getFragmentManager().popBackStack();
         }
     }
 
@@ -134,14 +135,14 @@ public class MenuActivity extends ActionBarActivity {
                 .remove(fragment)
                 .commit();
         lv.setVisibility(View.VISIBLE);
-        fragRemoved = 1;
     }
 
-    public void replaceFragment(Fragment fragment){
+    public void addFragment(Fragment fragment){
         lv.setVisibility(View.INVISIBLE);
+        fragmentStack.push(fragment);
         getFragmentManager()
                 .beginTransaction()
-                .replace(R.id.fragment_container, fragment)
+                .add(R.id.fragment_container, fragment)
                 .commit();
     }
 

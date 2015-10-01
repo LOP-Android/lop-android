@@ -25,10 +25,6 @@
             android:name=".JSONTestActivity"
             android:label="@string/title_activity_jsontest" >
         </activity>
-        <activity
-            android:name=".RegisterUser"
-            android:label="RegisterUser" >
-        </activity>
     </application>
 
 </manifest>
