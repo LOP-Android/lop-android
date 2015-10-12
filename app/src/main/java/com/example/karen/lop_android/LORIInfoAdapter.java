@@ -24,18 +24,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 import android.widget.Button;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.ArrayList;
 
-public class LOInfoAdapter extends BaseExpandableListAdapter {
+public class LORIInfoAdapter extends BaseExpandableListAdapter {
+    private JSONArray jsonArr = new JSONArray();
     private Context context = null;
     private String[] lo = null;
 
-    public LOInfoAdapter(Context context, String[] lo){
+    public LORIInfoAdapter(Context context, String[] lo){
         this.context = context;
         this.lo = lo;
+    }
+
+    public JSONArray getJSONArray(){
+
+        return this.jsonArr;
     }
 
     @Override
@@ -68,23 +78,36 @@ public class LOInfoAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         String lo_info = (String)getChild(groupPosition, childPosition);
         if(convertView == null){
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.my_list_2, parent, false);
         }
-        TextView tv = (TextView)convertView.findViewById(R.id.lo_info);
-        tv.setText("this lo is about "+getGroup(groupPosition));
-        // ari lang pag test2 sa download--------------------------------------------------
-        Button btnDownload = (Button)convertView.findViewById(R.id.btnDownload);
-        btnDownload.setOnClickListener(new View.OnClickListener() {
+        TextView evalDesc = (TextView)convertView.findViewById(R.id.evalDesc);
+        final TextView pbarValue = (TextView)convertView.findViewById(R.id.pbarValue);
+        final SeekBar sb = (SeekBar)convertView.findViewById(R.id.seekBar);
+        sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
-            public void onClick(View v) {
-                Toast.makeText(context, "test", Toast.LENGTH_SHORT).show();
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                pbarValue.setText(progress + "");
+                try {
+                    jsonArr.put(groupPosition, progress);
+                }catch(JSONException e){}
+                //Toast.makeText(context, getJSONArray()+"", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
             }
         });
-        // ari lang pag test2 sa download--------------------------------------------------
+        evalDesc.setText("INPUT EVALUATION DESCRIPTION HERE");
         return convertView;
     }
 

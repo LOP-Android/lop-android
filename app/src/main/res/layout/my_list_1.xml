@@ -4,12 +4,14 @@
     android:layout_height="fill_parent">
 
     <TextView
+        android:background="#2D2D2D"
         android:id="@+id/lo_name"
         android:text="lo_name"
+        android:textColor="#f79b0c"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceListItemSmall"
-        android:gravity="center"
+        android:gravity="center_vertical"
         android:minHeight="?android:attr/listPreferredItemHeightSmall" />
 
 </RelativeLayout>

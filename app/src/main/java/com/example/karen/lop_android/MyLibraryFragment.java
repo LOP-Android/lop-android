@@ -56,6 +56,8 @@ public class MyLibraryFragment extends Fragment {
                             //addFragment(MenuActivity.currentFrag);
                             Intent i = new Intent(getActivity(), LOPlayerActivity.class);
                             startActivity(i);
+                    case 1: MenuActivity.currentFrag = new LORI();
+                            addFragment(MenuActivity.currentFrag);
                 }
             }
         });
