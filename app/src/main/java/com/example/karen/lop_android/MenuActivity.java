@@ -39,7 +39,7 @@ public class MenuActivity extends ActionBarActivity {
     private MainMenuFragment mmf = new MainMenuFragment();
     private ListView lv;
     private int fragRemoved = 0;
-    private String downloadLoURL = "http://192.168.1.43:8080/InformatronYX/informatron/LO/availableLearningObjects";
+    private String downloadLoURL = "http://192.168.1.43:8080/InformatronYX/informatron/user/get";
     JSONObject strRoot;
     JSONArray arr;
     String test = null;
@@ -73,14 +73,9 @@ public class MenuActivity extends ActionBarActivity {
                     case 0:addFragment(new MyLibraryFragment());break;
 //                    case 1: currentFrag = new DownloadLOFragment();
 //                        replaceFragment(currentFrag);break;
-                    case 1: if(testDownloadJSONObject() != null){
+                    case 1: addFragment(new DownloadLOFragment());
 
-                            Toast.makeText(getApplicationContext(),testDownloadJSONObject().toString(),Toast.LENGTH_LONG).show();
-                        }
-                        else{
-                            Toast.makeText(getApplicationContext(),"FUCK U",Toast.LENGTH_LONG).show();
 
-                    }
                         break;
                     case 2:addFragment(new StoreFragment());break;
                     case 5:addFragment(new SettingsFragment());break;
