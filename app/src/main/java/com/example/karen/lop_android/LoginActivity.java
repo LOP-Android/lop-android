@@ -78,6 +78,7 @@ public class LoginActivity extends Activity {
                 r = new Register();
                 //set on click registerBtn to post json to informatron
                 try {
+                    r.setUrl(SettingsFragment.URLString);
                     r.registerUser(getApplicationContext(),
                             user.getText().toString(),
                             pass.getText().toString(),
@@ -155,9 +156,9 @@ public class LoginActivity extends Activity {
             Opens to another activity
              */
         registerBtn = new TextView(this);
-        registerBtn.setTextColor(getResources().getColor(android.R.color.holo_blue_light));
-        registerBtn.setHint("Register");
+        registerBtn.setText("Register");
         registerBtn.setTextSize(15);
+        registerBtn.setTextColor(getResources().getColor(android.R.color.holo_blue_light));
         registerBtn.setPaintFlags(registerBtn.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         registerBtn.setGravity(Gravity.CENTER_HORIZONTAL);
         registerBtn.setClickable(true);

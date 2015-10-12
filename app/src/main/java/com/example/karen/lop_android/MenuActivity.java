@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.StrictMode;
+import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -57,6 +58,7 @@ public class MenuActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_menu);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         lv = (ListView)findViewById(R.id.listView);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, sample_list);
@@ -81,7 +83,8 @@ public class MenuActivity extends ActionBarActivity {
                     }
                         break;
                     case 2:addFragment(new StoreFragment());break;
-                    case 5:addFragment(new AboutFragment());break;
+                    case 5:addFragment(new SettingsFragment());break;
+                    case 6:addFragment(new AboutFragment());break;
                 }
                 fragRemoved = 0;
             }
@@ -122,6 +125,7 @@ public class MenuActivity extends ActionBarActivity {
         if(fragmentStack.empty()){
             Intent intent = new Intent(MenuActivity.this, LoginActivity.class);
             startActivity(intent);
+            //NavUtils.navigateUpFromSameTask(getParent());
         }
         else {
             removeFragment(fragmentStack.pop());
@@ -162,10 +166,17 @@ public class MenuActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == android.R.id.home) {
+            onBackPressed();
             return true;
         }
 
-        return super.onOptionsItemSelected(item);
+        else if (id == R.id.action_settings) {
+            return true;
+        }
+
+        else {
+            return super.onOptionsItemSelected(item);
+        }
     }
 }

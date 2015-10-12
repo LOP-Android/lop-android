@@ -2,10 +2,10 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:state_pressed="true"
-        android:drawable="@drawable/abc_list_selector_background_transition_holo_dark"/>
+        android:drawable="@color/button_material_dark"/>
     <item
         android:state_focused="true"
-        android:drawable="@drawable/abc_list_selector_background_transition_holo_light"/>
+        android:drawable="@color/button_material_dark"/>
     <item
-        android:drawable="@android:drawable/editbox_background_normal"/>
+        android:drawable="@color/button_material_light"/>
 </selector>

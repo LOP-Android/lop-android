@@ -1,6 +1,7 @@
 package com.example.karen.lop_android;
 
 import android.app.Fragment;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -51,8 +52,10 @@ public class MyLibraryFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch(position){
-                    case 0: MenuActivity.currentFrag = new LOFragment();
-                            addFragment(MenuActivity.currentFrag);
+                    case 0: //MenuActivity.currentFrag = new LOFragment();
+                            //addFragment(MenuActivity.currentFrag);
+                            Intent i = new Intent(getActivity(), LOPlayerActivity.class);
+                            startActivity(i);
                 }
             }
         });

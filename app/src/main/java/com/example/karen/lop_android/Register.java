@@ -21,10 +21,14 @@ import java.io.InputStreamReader;
  * Created by hebi5 on 9/24/2015.
  */
 public class Register {
-    String urlTest="http://hmkcode.appspot.com/jsonservlet";
-    public static final String URL = "http://192.168.1.43:8080/InformatronYX/informatron/title/signup";
+    private String urlTest="http://hmkcode.appspot.com/jsonservlet";
+    public String URL = "http://192.168.1.39:8080/InformatronYX/informatron/user/signup";
     boolean registerSuccess = false;
     String jsonRegister = "a";
+
+    public void setUrl(String url){
+        this.URL = url;
+    }
 
     public void registerUser(Context ctx, String username, String password, String email, String firstName, String lastName){
 
@@ -36,13 +40,13 @@ public class Register {
             jsonObject.put("password", password);
             jsonObject.put("firstName", firstName);
             jsonObject.put("lastName", lastName);
-            jsonObject.put("uploadDate", email);
+            jsonObject.put("email", email);
 
 
             jsonRegister = jsonObject.toString();
 
             HttpClient httpclient = new DefaultHttpClient();
-            HttpPost httpPost = new HttpPost(urlTest);
+            HttpPost httpPost = new HttpPost(URL);
 
             StringEntity se = new StringEntity(jsonRegister);
             httpPost.setEntity(se);
@@ -57,11 +61,11 @@ public class Register {
 
             inputStream = httpResponse.getEntity().getContent();
             result = convertInputStreamToString(inputStream);
-            Toast.makeText(ctx, result, Toast.LENGTH_SHORT).show();
+            Toast.makeText(ctx, result, Toast.LENGTH_LONG).show();
 
             registerSuccess = true;
         }catch(Exception e){
-            Toast.makeText(ctx, "error: "+e.toString(), Toast.LENGTH_SHORT).show(); };
+            Toast.makeText(ctx, "error: "+e.toString(), Toast.LENGTH_LONG).show(); };
     }
 
     private static String convertInputStreamToString(InputStream inputStream) throws IOException {
