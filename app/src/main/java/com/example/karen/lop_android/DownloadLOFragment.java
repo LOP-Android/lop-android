@@ -3,6 +3,7 @@ package com.example.karen.lop_android;
 import java.net.URL;
 import java.net.HttpURLConnection;
 
+import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -21,12 +22,14 @@ import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.MimeTypeMap;
 import android.webkit.URLUtil;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,23 +50,56 @@ import java.io.IOException;
  */
 public class DownloadLOFragment extends Fragment {
 
-String myHttpURL = "http://s23.postimg.org/ip87nyy4r/Arianny.jpg";
+public static String myHttpURL = "http://www.noiseaddicts.com/samples_1w72b820/4245.mp3";
 String downloadLoURL = "http://localhost:8080/InformatronYX/informatron/LO/availableLearningObjects";
 JSONArray arr;
 JSONObject strRoot;
 String test = null;
-View rootView;
+
+    /////test
+ private LinearLayout.LayoutParams lparams;
+ private LinearLayout layout;
+ private Button setURL;
+ private EditText e;
  LinearLayout ll;
  TextView tv;
+ Button btnTrad;
+ View rootView;
 
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        View rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        //rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-            Button btnTrad = (Button)rootView.findViewById(R.id.btnTrad);
-            Button btnDM = (Button)rootView.findViewById(R.id.btnDM);
+        btnTrad = new Button(getActivity());
+        btnTrad.setText("download");
+        btnTrad.setBackground(getResources().getDrawable(R.drawable.button_states));
+
+        lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
+        lparams.gravity = Gravity.CENTER_HORIZONTAL;
+        lparams.setMargins(0,100,0,50);
+
+        layout = new LinearLayout(getActivity());
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setLayoutParams(lparams);
+
+        e = new EditText(getActivity());
+        e.setGravity(Gravity.CENTER_HORIZONTAL);
+        e.setHint("input url here");
+        setURL = new Button(getActivity());
+        setURL.setBackground(getResources().getDrawable(R.drawable.button_states));
+        setURL.setGravity(Gravity.CENTER_HORIZONTAL);
+        setURL.setText("connect");
+        setURL.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                myHttpURL = e.getText()+"";
+                Toast.makeText(getActivity(), "OK", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         btnTrad.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,17 +108,12 @@ View rootView;
             }
         });
 
-        btnDM.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
-
+        layout.addView(e);
+        layout.addView(setURL);
+        layout.addView(btnTrad);
+        rootView = layout;
         return rootView;
     }
-
-
 
 
 
@@ -103,7 +134,7 @@ View rootView;
                 connection.setDoOutput(true);
                 connection.setRequestMethod("GET");
                 connection.connect();
-                File rootDirectory = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES), "My Pictures");
+                File rootDirectory = new File(Environment.getExternalStorageDirectory(), "My Pictures");
 
                 if(!rootDirectory.exists()){
                         rootDirectory.mkdirs();
