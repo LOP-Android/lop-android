@@ -56,6 +56,7 @@ public class MenuActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getSupportActionBar().setTitle("Welcome!");
 
         setContentView(R.layout.activity_menu);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -70,16 +71,21 @@ public class MenuActivity extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 switch (position) {
-                    case 0:addFragment(new MyLibraryFragment());break;
+                    case 0: getSupportActionBar().setTitle("My Library");
+                            addFragment(new MyLibraryFragment());break;
 //                    case 1: currentFrag = new DownloadLOFragment();
 //                        replaceFragment(currentFrag);break;
-                    case 1: addFragment(new DownloadLOFragment());
+                    case 1: getSupportActionBar().setTitle("Download");
+                            addFragment(new DownloadLOFragment());
 
 
                         break;
-                    case 2:addFragment(new StoreFragment());break;
-                    case 5:addFragment(new SettingsFragment());break;
-                    case 6:addFragment(new AboutFragment());break;
+                    case 2: getSupportActionBar().setTitle("LOStore");
+                            addFragment(new StoreFragment());break;
+                    case 5: getSupportActionBar().setTitle("Settings");
+                            addFragment(new SettingsFragment());break;
+                    case 6: getSupportActionBar().setTitle("About");
+                            addFragment(new AboutFragment());break;
                 }
                 fragRemoved = 0;
             }
@@ -123,6 +129,9 @@ public class MenuActivity extends ActionBarActivity {
             //NavUtils.navigateUpFromSameTask(getParent());
         }
         else {
+            if(fragmentStack.size() == 1){
+                getSupportActionBar().setTitle("Welcome!");
+            }
             removeFragment(fragmentStack.pop());
             //getFragmentManager().popBackStack();
         }

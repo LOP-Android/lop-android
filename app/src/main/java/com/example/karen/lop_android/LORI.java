@@ -1,12 +1,13 @@
 package com.example.karen.lop_android;
 
 import android.annotation.TargetApi;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.annotation.Nullable;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,8 +69,8 @@ public class LORI extends Fragment {
         inflateViews();
         //setQuestions();
 
-        sv.addView(ll);
-        rootView = sv;
+        //sv.addView(ll);
+        rootView = ll;
         return rootView;
     }
 
@@ -78,7 +79,7 @@ public class LORI extends Fragment {
 
         lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
 
-        elvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, 750);
+        elvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, 400);
         elvParams.setMargins(30,50,30,50);
         //buttonParams.;
 
@@ -92,7 +93,13 @@ public class LORI extends Fragment {
         ll.setLayoutParams(lparams);
         ll.setBackgroundColor(Color.WHITE);
 
+        LinearLayout.LayoutParams test = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        //test.setMargins(200,100,100,100);
+
+        test.gravity = Gravity.CENTER_HORIZONTAL;
+
         im = new ImageView(getActivity());
+        im.setLayoutParams(test);
         im.setImageDrawable(getResources().getDrawable(R.drawable.lori_logo));
 
         loriAdapter = new LORIInfoAdapter(getActivity(), questions);
@@ -108,7 +115,7 @@ public class LORI extends Fragment {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(getActivity(), loriAdapter.getJSONArray()+"", Toast.LENGTH_SHORT).show();
-                sendJSON(loriAdapter.getJSONArray(), 123);
+                sendLORI(loriAdapter.getJSONArray(), 123);
             }
         });
 
@@ -118,7 +125,7 @@ public class LORI extends Fragment {
         //ll.addView(ratingLayout);
     }
 
-    public void sendJSON(JSONArray jsonArray, int loid){
+    public void sendLORI(JSONArray jsonArray, int loid){
         InputStream inputStream = null;
         String result = "";
         try {

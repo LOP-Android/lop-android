@@ -7,4 +7,5 @@
     <string name="title">LearningObjectPlayer</string>
     <string name="title_activity_jsontest">JSONTestActivity</string>
     <string name="title_activity_loplayer">LOPlayer</string>
+    <string name="title_activity_video">VideoActivity</string>
 </resources>

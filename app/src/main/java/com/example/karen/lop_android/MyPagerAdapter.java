@@ -15,9 +15,10 @@ public class MyPagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int i) {
         switch(i){
-            case 0: return new fragment1();
-            case 1: return new fragment2();
-            case 2: return new fragment3();
+            case 0: return new Page1Fragment();
+            case 1: return new Page2Fragment();
+            case 2: return new Page3Fragment();
+            case 3: return new LORI();
             default: break;
         }
         return null;
@@ -25,6 +26,6 @@ public class MyPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 3;
+        return 4;
     }
 }

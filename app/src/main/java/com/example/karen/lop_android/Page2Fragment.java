@@ -21,7 +21,7 @@ import java.io.IOException;
 /**
  * Created by hebi5 on 10/11/2015.
  */
-public class fragment3 extends Fragment {
+public class Page2Fragment extends Fragment {
     View rootView;
     LinearLayout.LayoutParams lparams;
     LinearLayout ll;
@@ -44,14 +44,14 @@ public class fragment3 extends Fragment {
 
         inflateViews();
         ll.addView(tv);
-        ll.addView(im);
-        ll.addView(tv2);
-        ll.addView(im2);
-        ll.addView(new VideoView(getActivity()));
+        //ll.addView(im);
+        //ll.addView(tv2);
+        //ll.addView(im2);
+        ll.addView(vm.getPlayer());
         ll.addView(ap.getPlayer());
 
-        sv.addView(ll);
-        rootView = sv;
+        //sv.addView(ll);
+        rootView = ll;
 
         return rootView;
     }
@@ -69,21 +69,22 @@ public class fragment3 extends Fragment {
         ll.setLayoutParams(lparams);
         ll.setBackgroundColor(getResources().getColor(R.color.background_floating_material_light));
 
+
         tv = new TextView(getActivity());
-        tv.setText("THIS IS PAGE 3");
+        tv.setText("THIS IS PAGE 2");
         tv.setGravity(Gravity.CENTER);
         tv.setTextSize(20);
 
         im = new ImageView(getActivity());
-        im.setImageDrawable(getResources().getDrawable(R.drawable.notbad));
+        im.setImageDrawable(getResources().getDrawable(R.drawable.meme));
         im2 = new ImageView(getActivity());
 
         tv2 = new TextView(getActivity());
-        tv2.setText("THIS IS PAGE 3");
+        tv2.setText("THIS IS PAGE 2");
         tv2.setGravity(Gravity.CENTER);
         tv2.setTextSize(20);
 
-        im2.setImageDrawable(getResources().getDrawable(R.drawable.notbad));
+        im2.setImageDrawable(getResources().getDrawable(R.drawable.meme));
 
     }
 }

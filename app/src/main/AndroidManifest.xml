@@ -3,6 +3,7 @@
     package="com.example.karen.lop_android" >
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -33,6 +34,10 @@
         <activity
             android:name=".LOPlayerActivity"
             android:label="@string/title_activity_loplayer" >
+        </activity>
+        <activity
+            android:name=".VideoActivity"
+            android:label="@string/title_activity_video" >
         </activity>
     </application>
 

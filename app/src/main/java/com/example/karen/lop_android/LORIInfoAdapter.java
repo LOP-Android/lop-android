@@ -17,6 +17,7 @@
 package com.example.karen.lop_android;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -37,6 +38,7 @@ public class LORIInfoAdapter extends BaseExpandableListAdapter {
     private JSONArray jsonArr = new JSONArray();
     private Context context = null;
     private String[] lo = null;
+    TextView tv;
 
     public LORIInfoAdapter(Context context, String[] lo){
         this.context = context;
@@ -55,7 +57,7 @@ public class LORIInfoAdapter extends BaseExpandableListAdapter {
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.my_list_1, parent, false);
         }
-        TextView tv = (TextView)convertView.findViewById(R.id.lo_name);
+        tv = (TextView)convertView.findViewById(R.id.lo_name);
         tv.setGravity(Gravity.CENTER_HORIZONTAL);
         tv.setTypeface(null, Typeface.BOLD);
         tv.setText(lo_name);
@@ -78,13 +80,13 @@ public class LORIInfoAdapter extends BaseExpandableListAdapter {
     }
 
     @Override
-    public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(final int groupPosition, final int childPosition, boolean isLastChild, View convertView, final ViewGroup parent) {
         String lo_info = (String)getChild(groupPosition, childPosition);
         if(convertView == null){
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = inflater.inflate(R.layout.my_list_2, parent, false);
         }
-        TextView evalDesc = (TextView)convertView.findViewById(R.id.evalDesc);
+        final TextView evalDesc = (TextView)convertView.findViewById(R.id.evalDesc);
         final TextView pbarValue = (TextView)convertView.findViewById(R.id.pbarValue);
         final SeekBar sb = (SeekBar)convertView.findViewById(R.id.seekBar);
         sb.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -94,17 +96,14 @@ public class LORIInfoAdapter extends BaseExpandableListAdapter {
                 try {
                     jsonArr.put(groupPosition, progress);
                 }catch(JSONException e){}
-                //Toast.makeText(context, getJSONArray()+"", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-
             }
 
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-
             }
         });
         evalDesc.setText("INPUT EVALUATION DESCRIPTION HERE");
