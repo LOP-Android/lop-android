@@ -302,7 +302,7 @@ public class LoginActivity extends Activity {
                 layout.addView(pass);
                 layout.addView(submitBtn);
                 layout.addView(registerBtn);
-                layout.addView(jsontest);
+                //layout.addView(jsontest);
             }
 
             flag = true;

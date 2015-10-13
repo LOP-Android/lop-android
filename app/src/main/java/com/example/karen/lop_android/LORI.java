@@ -79,7 +79,7 @@ public class LORI extends Fragment {
 
         lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
 
-        elvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, 400);
+        elvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, 500);
         elvParams.setMargins(30,50,30,50);
         //buttonParams.;
 
@@ -93,13 +93,7 @@ public class LORI extends Fragment {
         ll.setLayoutParams(lparams);
         ll.setBackgroundColor(Color.WHITE);
 
-        LinearLayout.LayoutParams test = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        //test.setMargins(200,100,100,100);
-
-        test.gravity = Gravity.CENTER_HORIZONTAL;
-
         im = new ImageView(getActivity());
-        im.setLayoutParams(test);
         im.setImageDrawable(getResources().getDrawable(R.drawable.lori_logo));
 
         loriAdapter = new LORIInfoAdapter(getActivity(), questions);

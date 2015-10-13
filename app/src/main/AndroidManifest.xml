@@ -28,10 +28,6 @@
             android:label="@string/title_activity_jsontest" >
         </activity>
         <activity
-            android:name=".LOPlayer"
-            android:label="@string/title_activity_loplayer" >
-        </activity>
-        <activity
             android:name=".LOPlayerActivity"
             android:label="@string/title_activity_loplayer" >
         </activity>
