@@ -61,11 +61,18 @@ public class Register {
 
             inputStream = httpResponse.getEntity().getContent();
             result = convertInputStreamToString(inputStream);
-            Toast.makeText(ctx, result, Toast.LENGTH_LONG).show();
 
             registerSuccess = true;
-        }catch(Exception e){
-            Toast.makeText(ctx, "error: "+e.toString(), Toast.LENGTH_LONG).show(); };
+            Toast.makeText(ctx, "Registration Successful!", Toast.LENGTH_LONG).show();
+        }
+        catch(IllegalStateException e){
+            Toast.makeText(ctx, "Cannot be null! \nERROR:"+e.toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(ctx, "Registration Failed", Toast.LENGTH_LONG).show();
+        }
+        catch(Exception e){
+            Toast.makeText(ctx, "ERROR: "+e.toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(ctx, "Registration Failed", Toast.LENGTH_LONG).show();
+        };
     }
 
     private static String convertInputStreamToString(InputStream inputStream) throws IOException {

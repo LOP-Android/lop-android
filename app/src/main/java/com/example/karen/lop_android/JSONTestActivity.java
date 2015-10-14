@@ -75,9 +75,9 @@ public class JSONTestActivity extends ActionBarActivity {
             public void onClick(View v) {
                 //Toast.makeText(getApplicationContext(), (strRoot.toString()!=null)?strRoot.toString():"null", Toast.LENGTH_LONG).show();
 
-                //Toast.makeText(getApplicationContext(), "fetching data from informatron..", Toast.LENGTH_SHORT).show();
-                //new JSONParseTask().execute();
-                Toast.makeText(getApplicationContext(), "hehe "+getJSONFromURL(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "fetching data from informatron..", Toast.LENGTH_SHORT).show();
+                new JSONParseTask().execute();
+                //Toast.makeText(getApplicationContext(), "hehe "+getJSONFromURL(), Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -175,7 +175,7 @@ public class JSONTestActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(JSONObject jsonObject){
             pValue.setVisibility(View.INVISIBLE);
-            Toast.makeText(getApplicationContext(), jsonObject.toString(), Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), strRoot.toString(), Toast.LENGTH_LONG).show();
                 //Toast.makeText(getApplicationContext(), jsonObject.toString(), Toast.LENGTH_LONG).show();
                 /*if (jsonObject != null) {
                     id.setText(((jsonObject.optInt("id") + "") != null) ?"id: " + jsonObject.optString("id") : "null");
@@ -207,16 +207,16 @@ public class JSONTestActivity extends ActionBarActivity {
             try {
                 response = myClient.execute(myConnection);
                 test = EntityUtils.toString(response.getEntity(), "UTF-8");
-                arr = new JSONArray("["+test+"]");
+                arr = new JSONArray(test);
                 strRoot = arr.getJSONObject(0);
                 finished = true;
 
             }
             catch (IOException e) {
-                Toast.makeText(getApplicationContext(), "error1: "+e.toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "error1: "+e.toString(), Toast.LENGTH_LONG).show();
             }
             catch (JSONException e) {
-                Toast.makeText(getApplicationContext(), "error2: "+e.toString(), Toast.LENGTH_LONG).show();
+                //Toast.makeText(getApplicationContext(), "error2: "+e.toString(), Toast.LENGTH_LONG).show();
             }
 
             startProgressBar();

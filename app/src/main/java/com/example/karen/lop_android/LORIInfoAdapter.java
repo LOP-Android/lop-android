@@ -17,22 +17,17 @@
 package com.example.karen.lop_android;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
-import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
-
-import java.util.ArrayList;
 
 public class LORIInfoAdapter extends BaseExpandableListAdapter {
     private JSONArray jsonArr = new JSONArray();
@@ -55,7 +50,7 @@ public class LORIInfoAdapter extends BaseExpandableListAdapter {
         String lo_name = (String)getGroup(groupPosition);
         if(convertView == null){
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.my_list_1, parent, false);
+            convertView = inflater.inflate(R.layout.lori_group_layout, parent, false);
         }
         tv = (TextView)convertView.findViewById(R.id.lo_name);
         tv.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -84,7 +79,7 @@ public class LORIInfoAdapter extends BaseExpandableListAdapter {
         String lo_info = (String)getChild(groupPosition, childPosition);
         if(convertView == null){
             LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.my_list_2, parent, false);
+            convertView = inflater.inflate(R.layout.lori_child_layout, parent, false);
         }
         final TextView evalDesc = (TextView)convertView.findViewById(R.id.evalDesc);
         final TextView pbarValue = (TextView)convertView.findViewById(R.id.pbarValue);

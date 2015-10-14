@@ -33,18 +33,11 @@ public class MyLibraryFragment extends Fragment {
     private Animation anim;
     private LinearLayout ll;
     private String[] loList = {
-            "Algebra",
-            "Calculus",
-            "Physics II",
-            "Java Programming",
-            "C Programming",
-            "Web Development",
-            "How To Speak Nihingo"};
+            "Sample LO"};
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.base_layout, container, false);
 
         inflateViews();
 
@@ -60,6 +53,7 @@ public class MyLibraryFragment extends Fragment {
             }
         });
 
+        rootView = ll;
         return rootView;
     }
 
@@ -120,6 +114,5 @@ public class MyLibraryFragment extends Fragment {
 
         });
 
-        rootView = ll;
     }
 }

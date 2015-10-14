@@ -18,8 +18,9 @@ import android.widget.Toast;
  * Created by hebi5 on 10/9/2015.
  */
 public class SettingsFragment extends Fragment {
-
+    //just for switching URL for RegisterUser.
     private LinearLayout.LayoutParams lparams;
+    private LinearLayout.LayoutParams btnlparams;
     private LinearLayout layout;
     private View rootView;
     private Button setURL;
@@ -36,6 +37,9 @@ public class SettingsFragment extends Fragment {
         lparams.gravity = Gravity.CENTER_HORIZONTAL;
         lparams.setMargins(0,100,0,50);
 
+        btnlparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        btnlparams.gravity = Gravity.CENTER_HORIZONTAL;
+
         layout = new LinearLayout(getActivity());
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setLayoutParams(lparams);
@@ -44,6 +48,7 @@ public class SettingsFragment extends Fragment {
         e.setGravity(Gravity.CENTER_HORIZONTAL);
         e.setHint("input url here");
         setURL = new Button(getActivity());
+        setURL.setLayoutParams(btnlparams);
         setURL.setBackground(getResources().getDrawable(R.drawable.button_states));
         setURL.setGravity(Gravity.CENTER_HORIZONTAL);
         setURL.setText("connect");

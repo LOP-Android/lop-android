@@ -23,6 +23,7 @@ import android.widget.Toast;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.HttpHostConnectException;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
@@ -39,6 +40,7 @@ import java.io.InputStreamReader;
 public class LORI extends Fragment {
     public String URL = "http://192.168.1.37:8080/InformatronYX/informatron/lori/submit";
     LinearLayout.LayoutParams lparams;
+    LinearLayout.LayoutParams btnlparams;
     LinearLayout.LayoutParams elvParams;
     LinearLayout ll;
     ScrollView sv;
@@ -64,12 +66,9 @@ public class LORI extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        //rootView = inflater.inflate(R.layout.lori_layout, container, false);
 
         inflateViews();
-        //setQuestions();
 
-        //sv.addView(ll);
         rootView = ll;
         return rootView;
     }
@@ -81,7 +80,9 @@ public class LORI extends Fragment {
 
         elvParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, 500);
         elvParams.setMargins(30,50,30,50);
-        //buttonParams.;
+
+        btnlparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        btnlparams.gravity = Gravity.CENTER_HORIZONTAL;
 
         sv = new ScrollView(getActivity());
         sv.setVerticalScrollBarEnabled(true);
@@ -104,11 +105,11 @@ public class LORI extends Fragment {
 
         send = new Button(getActivity());
         send.setText("SUBMIT");
+        send.setLayoutParams(btnlparams);
         send.setBackground(getResources().getDrawable(R.drawable.button_states));
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Toast.makeText(getActivity(), loriAdapter.getJSONArray()+"", Toast.LENGTH_SHORT).show();
                 sendLORI(loriAdapter.getJSONArray(), 123);
             }
         });
@@ -116,7 +117,6 @@ public class LORI extends Fragment {
         ll.addView(im);
         ll.addView(elv);
         ll.addView(send);
-        //ll.addView(ratingLayout);
     }
 
     public void sendLORI(JSONArray jsonArray, int loid){
@@ -134,7 +134,6 @@ public class LORI extends Fragment {
 
 
             jsonLORI = jsonObject.toString();
-            Toast.makeText(getActivity(),""+jsonLORI, Toast.LENGTH_LONG).show();
 
             HttpClient httpclient = new DefaultHttpClient();
             HttpPost httpPost = new HttpPost(URL);
@@ -155,8 +154,13 @@ public class LORI extends Fragment {
 
             Toast.makeText(getActivity(),"mao ni "+ result, Toast.LENGTH_LONG).show();
 
-        }catch(Exception e){
-            Toast.makeText(getActivity(), "error: "+e.toString(), Toast.LENGTH_LONG).show(); };
+        }
+        catch(HttpHostConnectException e){
+            Toast.makeText(getActivity(), "Must establish a connection to Host! \nERROR: "+e.toString(), Toast.LENGTH_LONG).show();
+        }
+        catch(Exception e){
+            Toast.makeText(getActivity(), "ERROR: "+e.toString(), Toast.LENGTH_LONG).show();
+        }
     }
 
     private static String convertInputStreamToString(InputStream inputStream) throws IOException {

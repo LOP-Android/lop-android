@@ -1,9 +1,12 @@
 package com.example.karen.lop_android;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
+import android.os.Build;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -18,6 +21,7 @@ public class AudioPlayer {
     MediaPlayer player;
     Button playPauseButton;
     Button stopButton;
+    Drawable buttonStateDraw;
     TextView title;
     LinearLayout playerControls;
     public AudioPlayer(Context context, Uri uri) throws IOException {
@@ -34,7 +38,15 @@ public class AudioPlayer {
         temp.addView(playerControls);
         return  temp;
     }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    public void setButtonStates(Drawable buttonStatesRes1, Drawable buttonStatesRes2){
+        stopButton.setBackground(buttonStatesRes1);
+        playPauseButton.setBackground(buttonStatesRes2);
+    }
+
     public void setTitle(String s){ title.setText(s);}
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     void initComponents(Context context){
         playPauseButton = new Button(context);
         playPauseButton.setText("PLAY/PAUSE");

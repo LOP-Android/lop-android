@@ -4,6 +4,7 @@ import java.net.URL;
 import java.net.HttpURLConnection;
 
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -31,6 +32,8 @@ import android.webkit.URLUtil;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,15 +59,17 @@ JSONArray arr;
 JSONObject strRoot;
 String test = null;
 
-    /////test
- private LinearLayout.LayoutParams lparams;
- private LinearLayout layout;
- private Button setURL;
- private EditText e;
- LinearLayout ll;
- TextView tv;
- Button btnTrad;
- View rootView;
+private LinearLayout.LayoutParams lparams;
+private LinearLayout.LayoutParams btnlparams;
+private LinearLayout layout;
+private Button setURL;
+private EditText e;
+LinearLayout ll;
+TextView tv;
+Button btnTrad;
+TextView pValue;
+ProgressBar progressBar;
+View rootView;
 
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -72,15 +77,22 @@ String test = null;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        //rootView = inflater.inflate(R.layout.fragment_main, container, false);
+        lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
+        lparams.gravity = Gravity.CENTER_HORIZONTAL;
+
+        btnlparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        btnlparams.gravity = Gravity.CENTER_HORIZONTAL;
 
         btnTrad = new Button(getActivity());
         btnTrad.setText("download");
+        btnTrad.setLayoutParams(btnlparams);
         btnTrad.setBackground(getResources().getDrawable(R.drawable.button_states));
-
-        lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
-        lparams.gravity = Gravity.CENTER_HORIZONTAL;
-        lparams.setMargins(0,100,0,50);
+        btnTrad.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new DownloadTask(getActivity(), myHttpURL).execute();
+            }
+        });
 
         layout = new LinearLayout(getActivity());
         layout.setOrientation(LinearLayout.VERTICAL);
@@ -89,9 +101,11 @@ String test = null;
         e = new EditText(getActivity());
         e.setGravity(Gravity.CENTER_HORIZONTAL);
         e.setHint("input url here");
+
         setURL = new Button(getActivity());
         setURL.setBackground(getResources().getDrawable(R.drawable.button_states));
         setURL.setGravity(Gravity.CENTER_HORIZONTAL);
+        setURL.setLayoutParams(btnlparams);
         setURL.setText("connect");
         setURL.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,34 +115,57 @@ String test = null;
             }
         });
 
-        btnTrad.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                    new myTask().execute();
-            }
-        });
+        pValue = new TextView(getActivity());
+        pValue.setGravity(Gravity.CENTER_HORIZONTAL);
+        pValue.setTextSize(20);
+
+        progressBar = new ProgressBar(getActivity(), null, android.R.attr.progressBarStyleHorizontal);
+        progressBar.setPadding(50,100,50,0);
+        progressBar.setVisibility(View.INVISIBLE);
+
 
         layout.addView(e);
         layout.addView(setURL);
         layout.addView(btnTrad);
+        layout.addView(progressBar);
+        layout.addView(pValue);
+
         rootView = layout;
         return rootView;
     }
 
 
 
-    private class myTask extends AsyncTask< Void, Void, Void>{
+    private class DownloadTask extends AsyncTask< Void, Integer, Void>{
         private boolean finished = false;
+        private Context context;
+        private String URL;
+
+        public DownloadTask(Context ctx, String url){
+            this.context = ctx;
+            this.URL = url;
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+            progressBar.setMax(100);
+            progressBar.setProgress(values[0]);
+            pValue.setText(values[0]+"%");
+        }
+
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            Toast.makeText(context, "downloading..", Toast.LENGTH_SHORT).show();
+            progressBar.setVisibility(View.VISIBLE);
         }
 
         @Override
         protected Void doInBackground(Void... params) {
 
             try {
-                URL myUrl = new URL(myHttpURL);
+                URL myUrl = new URL(this.URL);
 
                 HttpURLConnection connection = (HttpURLConnection)myUrl.openConnection();
                 connection.setDoOutput(true);
@@ -150,10 +187,14 @@ String test = null;
                 FileOutputStream outputStream = new FileOutputStream(file);
 
                 byte[] buffer = new byte[1024];
+                long total = 0;
                 int byteCount = 0;
 
+
                 while((byteCount = inputStream.read(buffer))>0){
-                    outputStream.write(buffer,0,byteCount);
+                    total+=byteCount;
+                    publishProgress((int)(total * 100 / connection.getContentLength()));
+                    outputStream.write(buffer, 0, byteCount);
                 }
 
                 outputStream.close();
@@ -168,6 +209,7 @@ String test = null;
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
         return null;
         }
 
@@ -175,7 +217,7 @@ String test = null;
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
 
-            Toast.makeText(getActivity(), "Completed",Toast.LENGTH_SHORT ).show();
+            Toast.makeText(getActivity(), "Download complete!",Toast.LENGTH_SHORT ).show();
         }
 
 

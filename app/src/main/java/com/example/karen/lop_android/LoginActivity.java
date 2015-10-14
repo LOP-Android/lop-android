@@ -21,8 +21,6 @@ import android.widget.Toast;
 
 
 public class LoginActivity extends Activity {
-    private static int ONCLICK_LOGIN = 1;
-    private static int ONCLICK_REGISTER = 2;
 
     private View.OnClickListener onClickLogin;
     private View.OnClickListener onClickRegstr;
@@ -37,8 +35,6 @@ public class LoginActivity extends Activity {
     private Button jsontest;
     private TextView tv;
     private ImageView im;
-    private EditText username;
-    private EditText password;
     private EditText firstName;
     private EditText lastName;
     private EditText email;
@@ -53,6 +49,9 @@ public class LoginActivity extends Activity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //TODO:prompt confirm dialog for when pressing back to exit activity
+
         super.onCreate(savedInstanceState);
         //initialize animation utility for usability in any edit text
         initAnimationUtils();
@@ -85,10 +84,9 @@ public class LoginActivity extends Activity {
                             email.getText().toString(),
                             firstName.getText().toString(),
                             lastName.getText().toString());
-                    Toast.makeText(getApplicationContext(), "Registration successful", Toast.LENGTH_SHORT).show();
                 }catch(Exception e){
-                    Toast.makeText(getApplicationContext(), "error: "+e.toString(), Toast.LENGTH_SHORT).show();
-                };
+                    Toast.makeText(getApplicationContext(), "ERROR: "+e.toString(), Toast.LENGTH_SHORT).show();
+                }
             }
         };
 
@@ -100,10 +98,6 @@ public class LoginActivity extends Activity {
         anim.setInterpolator(getApplicationContext(), android.R.anim.bounce_interpolator);
         anim.setDuration(1000);
 
-    }
-
-    private void switchOnClickListener(View.OnClickListener ocl, Button btn){
-        btn.setOnClickListener(ocl);
     }
 
     //creates submitBtn button
@@ -139,10 +133,6 @@ public class LoginActivity extends Activity {
                 startActivity(intent);
             }
         });
-    }
-
-    private void refreshContentView(){
-        this.setContentView(layout);
     }
 
     private void switchContentView(View view){

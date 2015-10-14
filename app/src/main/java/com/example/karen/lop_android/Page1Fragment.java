@@ -44,6 +44,7 @@ public class Page1Fragment extends Fragment {
     ScrollView sv;
     VideoManager vm;
     AudioPlayer ap;
+    WebManager wm;
 
     @Nullable
     @Override
@@ -51,7 +52,11 @@ public class Page1Fragment extends Fragment {
         vm = new VideoManager(getActivity(), Uri.parse(Environment.getExternalStorageDirectory().getPath() + "/lo7/vid/sample.mp4"));
         try {
             ap = new AudioPlayer(getActivity(), Uri.parse(Environment.getExternalStorageDirectory().getPath() + "/lo7/aud/samplemp3.mp3"));
+            ap.setButtonStates(getResources().getDrawable(R.drawable.button_states), getResources().getDrawable(R.drawable.button_states));
+
         }catch(IOException e){}
+        wm = new WebManager("file://"+Environment.getExternalStorageDirectory().getPath() + "/lo7/quiz/index.html", getActivity());
+        wm.setButtonStates(getResources().getDrawable(R.drawable.button_states), getResources().getDrawable(R.drawable.button_states), getResources().getDrawable(R.drawable.button_states));
 
         inflateViews();
         //ll2.addView(vm.getPlayer());
@@ -59,12 +64,12 @@ public class Page1Fragment extends Fragment {
         //ll.addView(im);
         //ll.addView(tv2);
         //ll.addView(im2);
-        ll.addView(vm.getPlayer());
+        ll.addView(wm.getInstance());
         ll.addView(ap.getPlayer());
 
-        //sv.addView(ll);
+        sv.addView(ll);
 
-        rootView = ll;
+        rootView = sv;
         return rootView;
     }
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)

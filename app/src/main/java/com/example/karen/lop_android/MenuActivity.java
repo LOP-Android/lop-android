@@ -36,7 +36,6 @@ public class MenuActivity extends ActionBarActivity {
     public static Stack<Fragment> fragmentStack = new Stack<Fragment>();
     public static FragmentManager fragmentManager;
     public static Fragment currentFrag;
-    private MainMenuFragment mmf = new MainMenuFragment();
     private ListView lv;
     private int fragRemoved = 0;
     private String downloadLoURL = "http://192.168.1.43:8080/InformatronYX/informatron/user/get";
@@ -73,13 +72,8 @@ public class MenuActivity extends ActionBarActivity {
                 switch (position) {
                     case 0: getSupportActionBar().setTitle("My Library");
                             addFragment(new MyLibraryFragment());break;
-//                    case 1: currentFrag = new DownloadLOFragment();
-//                        replaceFragment(currentFrag);break;
                     case 1: getSupportActionBar().setTitle("Download");
-                            addFragment(new DownloadLOFragment());
-
-
-                        break;
+                            addFragment(new DownloadLOFragment());break;
                     case 2: getSupportActionBar().setTitle("LOStore");
                             addFragment(new StoreFragment());break;
                     case 5: getSupportActionBar().setTitle("Settings");
@@ -92,48 +86,17 @@ public class MenuActivity extends ActionBarActivity {
         });
     }
 
-    public JSONObject testDownloadJSONObject(){
-
-        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-        StrictMode.setThreadPolicy(policy);
-
-        HttpResponse response;
-        HttpClient myClient = new DefaultHttpClient();
-        HttpPost myConnection = new HttpPost(downloadLoURL);
-
-
-        try {
-            response = myClient.execute(myConnection);
-            test = EntityUtils.toString(response.getEntity(), "UTF-8");
-            arr = new JSONArray(test);
-            strRoot = arr.getJSONObject(0);
-
-
-        }
-        catch (IOException e) {
-            Toast.makeText(getApplicationContext(),"FUCK U "+e.toString(),Toast.LENGTH_LONG).show();}
-        catch (JSONException e) {
-            Toast.makeText(getApplicationContext(),"FUCK U "+e.toString(),Toast.LENGTH_LONG).show();}
-
-        //startProgressBar();
-        return strRoot;
-    }
-
-
-
     @Override
     public void onBackPressed() {
         if(fragmentStack.empty()){
             Intent intent = new Intent(MenuActivity.this, LoginActivity.class);
             startActivity(intent);
-            //NavUtils.navigateUpFromSameTask(getParent());
         }
         else {
             if(fragmentStack.size() == 1){
                 getSupportActionBar().setTitle("Welcome!");
             }
             removeFragment(fragmentStack.pop());
-            //getFragmentManager().popBackStack();
         }
     }
 

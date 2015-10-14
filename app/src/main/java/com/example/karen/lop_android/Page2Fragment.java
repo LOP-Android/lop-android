@@ -39,6 +39,7 @@ public class Page2Fragment extends Fragment {
         vm = new VideoManager(getActivity(), Uri.parse(Environment.getExternalStorageDirectory().getPath() + "/lo7/vid/sample.mp4"));
         try {
             ap = new AudioPlayer(getActivity(), Uri.parse(Environment.getExternalStorageDirectory().getPath() + "/lo7/aud/samplemp3.mp3"));
+            ap.setButtonStates(getResources().getDrawable(R.drawable.button_states), getResources().getDrawable(R.drawable.button_states));
         }catch(IOException e){}
 
 

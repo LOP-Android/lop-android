@@ -6,14 +6,18 @@ import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 
 /**
  * Created by hebi5 on 8/22/2015.
  */
 public class StoreFragment extends MyLibraryFragment {
+    //tentative pani.
     View rootView;
+    ListView lv;
     ExpandableListView elv;
     LinearLayout.LayoutParams lparams;
     LinearLayout ll;
@@ -24,19 +28,11 @@ public class StoreFragment extends MyLibraryFragment {
             "Physics II",
             "Java Programming",
             "C Programming",
-            "Web Development",
-            "How To Speak Nihingo",
-            "How To Speak Nihingo",
-            "How To Speak Nihingo",
-            "How To Speak Nihingo",
-            "How To Speak Nihingo",
-            "How To Speak Nihingo",
-            "How To Speak Nihingo"};
+            "Web Development"};
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        rootView = inflater.inflate(R.layout.explist_base_layout, container, false);
 
         lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
 
@@ -45,12 +41,12 @@ public class StoreFragment extends MyLibraryFragment {
         ll.setLayoutParams(lparams);
         ll.setBackgroundColor(Color.WHITE);
 
-        //elv = (ExpandableListView)getActivity().findViewById(R.id.exp_list);
-        elv = new ExpandableListView(getActivity());
+        lv = new ListView(getActivity());
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, loList);
 
-        elv.setAdapter(new LORIInfoAdapter(getActivity(), loList));
+        lv.setAdapter(adapter);
 
-        ll.addView(elv);
+        ll.addView(lv);
         rootView = ll;
         return rootView;
     }
