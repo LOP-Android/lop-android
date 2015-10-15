@@ -38,7 +38,7 @@ import java.io.InputStreamReader;
  * Created by hebi5 on 10/12/2015.
  */
 public class LORI extends Fragment {
-    public String URL = "http://192.168.1.37:8080/InformatronYX/informatron/lori/submit";
+    public String URL = "http://192.168.254.102:8080/InformatronYX/informatron/lori/submit";
     LinearLayout.LayoutParams lparams;
     LinearLayout.LayoutParams btnlparams;
     LinearLayout.LayoutParams elvParams;
@@ -62,6 +62,11 @@ public class LORI extends Fragment {
             "Standards Compliance",
             "Nihingo"
     };
+
+
+    public void setUrl(String url){
+        this.URL = url;
+    }
 
     @Nullable
     @Override
@@ -110,6 +115,7 @@ public class LORI extends Fragment {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setUrl(SettingsFragment.URLString);
                 sendLORI(loriAdapter.getJSONArray(), 123);
             }
         });
@@ -124,7 +130,7 @@ public class LORI extends Fragment {
         String result = "";
         try {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", 123);
+            jsonObject.put("id", 1234);
             jsonObject.put("evaluation", jsonArray);
             jsonObject.put("learningObjectId", 123);
             jsonObject.put("subject", "boto");

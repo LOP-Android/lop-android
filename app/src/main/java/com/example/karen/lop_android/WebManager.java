@@ -214,6 +214,7 @@ public class WebManager {
                        FileWriter write = new FileWriter(validPath.toString()+"/assets/js/quizScore.txt");
 
                        write.write(sb.toString());
+                       Toast.makeText(baseContext, sb.toString(), Toast.LENGTH_SHORT).show();
                        write.close();
 
                    } catch (Exception e) {

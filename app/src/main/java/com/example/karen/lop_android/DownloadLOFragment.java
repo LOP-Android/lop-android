@@ -1,5 +1,6 @@
 package com.example.karen.lop_android;
 
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.HttpURLConnection;
 
@@ -37,8 +38,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.util.EntityUtils;
@@ -140,6 +143,8 @@ View rootView;
         private boolean finished = false;
         private Context context;
         private String URL;
+        InputStream stream;
+        InputStream stream1;
 
         public DownloadTask(Context ctx, String url){
             this.context = ctx;
@@ -171,31 +176,58 @@ View rootView;
                 connection.setDoOutput(true);
                 connection.setRequestMethod("GET");
                 connection.connect();
+
+                // IAN CODE
+                HttpClient client = new DefaultHttpClient();
+                HttpClient client1 = new DefaultHttpClient();
+                try {
+                    HttpGet req = new HttpGet(myUrl.toURI());
+                    HttpResponse response = client.execute(req);
+                    stream = response.getEntity().getContent();
+
+                    HttpGet req1 = new HttpGet(myUrl.toURI());
+                    HttpResponse response1 = client1.execute(req1);
+                    stream1 = response1.getEntity().getContent();
+
+
+                } catch (URISyntaxException e1) {
+                    e1.printStackTrace();
+                }
+
+
+
                 File rootDirectory = new File(Environment.getExternalStorageDirectory(), "My Pictures");
 
                 if(!rootDirectory.exists()){
                         rootDirectory.mkdirs();
-
                 }
 
                 String nameOfFile = URLUtil.guessFileName(myHttpURL,null, MimeTypeMap.getFileExtensionFromUrl(myHttpURL));
                 File file = new File(rootDirectory,nameOfFile);
                 file.createNewFile();
 
-                InputStream inputStream = connection.getInputStream();
+
+                //InputStream inputStream = connection.getInputStream();
 
                 FileOutputStream outputStream = new FileOutputStream(file);
 
                 byte[] buffer = new byte[1024];
+                byte[] buffer1 = new byte[1024];
                 long total = 0;
+                long currentBytes = 0;
                 int byteCount = 0;
+                int byteCount1 = 0;
 
+                while((byteCount1 = stream1.read(buffer1))>0){
+                    total += byteCount1;
+                }
 
-                while((byteCount = inputStream.read(buffer))>0){
-                    total+=byteCount;
-                    publishProgress((int)(total * 100 / connection.getContentLength()));
+                while((byteCount = stream.read(buffer))>0){
+                    currentBytes+=byteCount;
+                    publishProgress((int)(currentBytes * 100 / total));
                     outputStream.write(buffer, 0, byteCount);
                 }
+
 
                 outputStream.close();
 
@@ -203,21 +235,25 @@ View rootView;
                 intent.setData(Uri.fromFile(file));
                 getActivity().sendBroadcast(intent);
 
-
+                finished = true;
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
         return null;
         }
 
         @Override
         protected void onPostExecute(Void result) {
             super.onPostExecute(result);
+            if(finished) {
+                Toast.makeText(context, "download complete!", Toast.LENGTH_LONG).show();
+            }
+            else{
+                Toast.makeText(context, "download failed!", Toast.LENGTH_LONG).show();
+            }
 
-            Toast.makeText(getActivity(), "Download complete!",Toast.LENGTH_SHORT ).show();
         }
 
 

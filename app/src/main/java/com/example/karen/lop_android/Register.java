@@ -63,7 +63,7 @@ public class Register {
             result = convertInputStreamToString(inputStream);
 
             registerSuccess = true;
-            Toast.makeText(ctx, "Registration Successful!", Toast.LENGTH_LONG).show();
+            Toast.makeText(ctx, "\n"+result, Toast.LENGTH_LONG).show();
         }
         catch(IllegalStateException e){
             Toast.makeText(ctx, "Cannot be null! \nERROR:"+e.toString(), Toast.LENGTH_LONG).show();
