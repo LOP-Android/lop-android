@@ -26,7 +26,7 @@ public class Register {
     boolean registerSuccess = false;
     String jsonRegister = "a";
 
-    public void setUrl(String url){
+    public void setRegisterUrl(String url){
         this.URL = url;
     }
 
@@ -55,8 +55,8 @@ public class Register {
             httpPost.setHeader("Content-type", "application/json");
 
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-
             StrictMode.setThreadPolicy(policy);
+
             HttpResponse httpResponse = httpclient.execute(httpPost);
 
             inputStream = httpResponse.getEntity().getContent();

@@ -3,8 +3,6 @@ package com.example.karen.lop_android;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.os.StrictMode;
-import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,23 +10,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ExpandableListView;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Stack;
 
 
@@ -45,7 +31,6 @@ public class MenuActivity extends ActionBarActivity {
 
     String[] sample_list = {
             "My Library",
-            "Download LO",
             "LO Store",
             "Favorites",
             "Recent",
@@ -63,6 +48,7 @@ public class MenuActivity extends ActionBarActivity {
         lv = (ListView)findViewById(R.id.listView);
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, sample_list);
         lv.setAdapter(adapter);
+        lv.setSelector(R.drawable.custom_list_selector);
 
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -70,20 +56,23 @@ public class MenuActivity extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 switch (position) {
-                    case 0: getSupportActionBar().setTitle("My Library");
-                            addFragment(new MyLibraryFragment());break;
-                    case 1: getSupportActionBar().setTitle("Download");
-                            addFragment(new DownloadLOFragment());break;
-                    case 2: getSupportActionBar().setTitle("LOStore");
+                    case 0: startActivity(new Intent(MenuActivity.this, MyLibraryActivity.class));
+                            break;
+                            //addFragment(new MyLibraryFragment());break;
+                    case 1: setActionBarTitle("LOStore");
                             addFragment(new StoreFragment());break;
-                    case 5: getSupportActionBar().setTitle("Settings");
-                            addFragment(new SettingsFragment());break;
-                    case 6: getSupportActionBar().setTitle("About");
+                    case 4: setActionBarTitle("Settings");
+                        addFragment(new SettingsFragment());break;
+                    case 5: setActionBarTitle("About");
                             addFragment(new AboutFragment());break;
                 }
                 fragRemoved = 0;
             }
         });
+    }
+
+    public void setActionBarTitle(String title){
+        getSupportActionBar().setTitle(title);
     }
 
     @Override
@@ -109,24 +98,27 @@ public class MenuActivity extends ActionBarActivity {
     }
 
     public void addFragment(Fragment fragment){
-        lv.setVisibility(View.INVISIBLE);
-        fragmentStack.push(fragment);
-        getFragmentManager()
-                .beginTransaction()
-                .add(R.id.fragment_container, fragment)
-                .commit();
+        if(!fragmentStack.contains(fragment)) {
+            lv.setVisibility(View.INVISIBLE);
+            fragmentStack.push(fragment);
+            getFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.fragment_container, fragment)
+                    .commit();
+        }
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
 
-        getMenuInflater().inflate(R.menu.menu_menu, menu);
+        //getMenuInflater().inflate(R.menu.menu_menu, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        //item.setVisible(true);
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -135,10 +127,6 @@ public class MenuActivity extends ActionBarActivity {
         //noinspection SimplifiableIfStatement
         if (id == android.R.id.home) {
             onBackPressed();
-            return true;
-        }
-
-        else if (id == R.id.action_settings) {
             return true;
         }
 

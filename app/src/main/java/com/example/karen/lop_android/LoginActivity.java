@@ -2,6 +2,8 @@ package com.example.karen.lop_android;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Build;
@@ -10,6 +12,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -50,26 +53,11 @@ public class LoginActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        //TODO:prompt confirm dialog for when pressing back to exit activity
-
         super.onCreate(savedInstanceState);
         //initialize animation utility for usability in any edit text
         initAnimationUtils();
 
         inflateViews(false);
-
-        onClickLogin = new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
-                //if(user.getText().toString().equals("admin") && pass.getText().toString().equals("admin")) {
-                    startActivity(intent);
-                //}
-                //else{
-                //    Toast.makeText(getApplicationContext(), "Error: Incorrect username/password", Toast.LENGTH_SHORT).show();
-                //}
-            }
-        };
 
         onClickRegstr = new View.OnClickListener(){
             @Override
@@ -77,7 +65,7 @@ public class LoginActivity extends Activity {
                 r = new Register();
                 //set on click registerBtn to post json to informatron
                 try {
-                    r.setUrl(SettingsFragment.URLString);
+                    r.setRegisterUrl(SettingsFragment.URL_Register);
                     r.registerUser(getApplicationContext(),
                             user.getText().toString(),
                             pass.getText().toString(),
@@ -100,6 +88,39 @@ public class LoginActivity extends Activity {
 
     }
 
+    //override back press for exiting activity
+
+
+    @Override
+    public void onBackPressed() {
+        AlertDialog alertDialog;
+        final Activity theActivity = this;
+
+
+        alertDialog = new AlertDialog.Builder(this)
+                .setMessage("Do you want to exit LOP?")
+                .setTitle("Leaving so soon?")
+                .setIcon(getResources().getDrawable(R.drawable.exit))
+                .setCancelable(true)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        theActivity.finish();
+                    }
+                })
+                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .create();
+
+        alertDialog.show();
+
+        //super.onBackPressed();
+    }
+
     //creates submitBtn button
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void createSbmtButton(){
@@ -112,12 +133,12 @@ public class LoginActivity extends Activity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
-                //if(user.getText().toString().equals("admin") && pass.getText().toString().equals("admin")) {
+                if(user.getText().toString().equals("admin") && pass.getText().toString().equals("admin")) {
                     startActivity(intent);
-                //}
-                //else{
-                //    Toast.makeText(getApplicationContext(), "Error: Incorrect username/password", Toast.LENGTH_SHORT).show();
-                //}
+                }
+                else{
+                    Toast.makeText(getApplicationContext(), "Error: Incorrect username/password", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -197,8 +218,12 @@ public class LoginActivity extends Activity {
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void inflateViewsForRegister(){
 
+        LinearLayout.LayoutParams etlparams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        etlparams.setMargins(30,0,30,10);
+
         //title registerBtn Firstname
         firstName = new EditText(this);
+        firstName.setLayoutParams(etlparams);
         firstName.setBackground(getResources().getDrawable(R.drawable.edittext_states));
         firstName.setHint("FIRSTNAME");
         firstName.setTextSize(15);
@@ -207,6 +232,7 @@ public class LoginActivity extends Activity {
 
         //title registerBtn lastname
         lastName = new EditText(this);
+        lastName.setLayoutParams(etlparams);
         lastName.setBackground(getResources().getDrawable(R.drawable.edittext_states));
         lastName.setHint("LASTNAME");
         lastName.setTextSize(15);
@@ -215,6 +241,7 @@ public class LoginActivity extends Activity {
 
         //title registerBtn uploadDate
         email = new EditText(this);
+        email.setLayoutParams(etlparams);
         email.setBackground(getResources().getDrawable(R.drawable.edittext_states));
         email.setHint("EMAIL");
         email.setTextSize(15);
@@ -256,8 +283,12 @@ public class LoginActivity extends Activity {
             tv.setText("Learning Object Player");
             tv.setGravity(Gravity.CENTER_HORIZONTAL);
 
+            LinearLayout.LayoutParams etlparams2 = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            etlparams2.setMargins(10,0,10,10);
+
             //for username text area
             user = new EditText(this);
+            user.setLayoutParams(etlparams2);
             user.setBackground(getResources().getDrawable(R.drawable.edittext_states));
             user.setHint("USERNAME");
             user.setTextSize(15);
@@ -266,6 +297,7 @@ public class LoginActivity extends Activity {
 
             //for password text area
             pass = new EditText(this);
+            pass.setLayoutParams(etlparams2);
             pass.setBackground(getResources().getDrawable(R.drawable.edittext_states));
             pass.setHint("PASSWORD");
             pass.setTextSize(15);

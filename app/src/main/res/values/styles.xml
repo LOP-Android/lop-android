@@ -10,7 +10,7 @@
     </style>
 
     <style name="CustomActionBarStyle" parent="@style/Widget.AppCompat.Light.ActionBar.Solid.Inverse">
-        <item name="background">@drawable/actionbar_style</item>
+        <item name="background">@color/theme_orange_dark</item>
         <item name="android:titleTextStyle">@style/CustomTextStyle</item>
     </style>
 

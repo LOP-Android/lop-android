@@ -68,6 +68,7 @@ public class Page3Fragment extends Fragment {
         ll = new LinearLayout(getActivity());
         ll.setOrientation(LinearLayout.VERTICAL);
         ll.setLayoutParams(lparams);
+        ll.setPadding(20,20,20,20);
         ll.setBackgroundColor(getResources().getColor(R.color.background_floating_material_light));
 
         tv = new TextView(getActivity());

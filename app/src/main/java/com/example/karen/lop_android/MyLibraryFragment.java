@@ -1,20 +1,23 @@
 package com.example.karen.lop_android;
 
+import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -30,6 +33,7 @@ public class MyLibraryFragment extends Fragment {
     private View rootView;
     private EditText searchBar;
     private ListView lv;
+    private ImageButton open;
     private Animation anim;
     private LinearLayout ll;
     private String[] loList = {
@@ -45,9 +49,7 @@ public class MyLibraryFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch(position){
-                    case 0: //MenuActivity.currentFrag = new LOFragment();
-                            //addFragment(MenuActivity.currentFrag);
-                            Intent i = new Intent(getActivity(), LOPlayerActivity.class);
+                    case 0: Intent i = new Intent(getActivity(), LOPlayerActivity.class);
                             startActivity(i);
                 }
             }
@@ -65,15 +67,14 @@ public class MyLibraryFragment extends Fragment {
                 .commit();
     }
 
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     public void inflateViews(){
 
-        anim = AnimationUtils.loadAnimation(getActivity(),android.R.anim.slide_out_right);
-        anim.setDuration(500);
 
         lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
         lv = new ListView(getActivity());
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, loList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.folder_list, R.id.folder_dir_txt, loList);
         lv.setAdapter(adapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -87,9 +88,24 @@ public class MyLibraryFragment extends Fragment {
 
         ll = new LinearLayout(getActivity());
         ll.setLayoutParams(lparams);
-        ll.setBackgroundColor(getResources().getColor(R.color.background_floating_material_light));
+        ll.setBackgroundColor(Color.WHITE);
         ll.setOrientation(LinearLayout.VERTICAL);
+
+        LinearLayout.LayoutParams btnlparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        btnlparams.gravity = Gravity.CENTER_HORIZONTAL;
+
+        open = new ImageButton(getActivity());
+        open.setBackground(getResources().getDrawable(R.drawable.button_states));
+        open.setLayoutParams(btnlparams);
+        open.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), MyLibraryActivity.class));
+            }
+        });
+
         ll.addView(searchBar);
+        ll.addView(open);
         ll.addView(lv);
 
         searchBar.addTextChangedListener(new TextWatcher() {

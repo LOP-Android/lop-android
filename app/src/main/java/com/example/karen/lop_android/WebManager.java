@@ -163,7 +163,6 @@ public class WebManager {
         webView.getSettings().setBuiltInZoomControls(false);
         webView.getSettings().setLoadWithOverviewMode(true);
         webView.getSettings().setUseWideViewPort(true);
-        webView.setInitialScale(50);
         webView.setScrollbarFadingEnabled(false);
 
         webSettings.setJavaScriptEnabled(true);
@@ -190,6 +189,7 @@ public class WebManager {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                Toast.makeText(baseContext, "hoy", Toast.LENGTH_SHORT).show();
                if (url.contains("score.txt/")) {
                    StringBuffer sb = new StringBuffer();
 
@@ -214,7 +214,6 @@ public class WebManager {
                        FileWriter write = new FileWriter(validPath.toString()+"/assets/js/quizScore.txt");
 
                        write.write(sb.toString());
-                       Toast.makeText(baseContext, sb.toString(), Toast.LENGTH_SHORT).show();
                        write.close();
 
                    } catch (Exception e) {

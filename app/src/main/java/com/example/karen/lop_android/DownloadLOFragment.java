@@ -6,22 +6,18 @@ import java.net.HttpURLConnection;
 
 import android.annotation.TargetApi;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.io.FileNotFoundException;
 
-import android.app.Activity;
 import android.app.Fragment;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.Gravity;
@@ -34,19 +30,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.apache.http.HttpRequest;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -57,22 +48,20 @@ import java.io.IOException;
 public class DownloadLOFragment extends Fragment {
 
 public static String myHttpURL = "http://www.noiseaddicts.com/samples_1w72b820/4245.mp3";
-String downloadLoURL = "http://localhost:8080/InformatronYX/informatron/LO/availableLearningObjects";
-JSONArray arr;
-JSONObject strRoot;
-String test = null;
+private String downloadLoURL = "http://localhost:8080/InformatronYX/informatron/LO/availableLearningObjects";
+private JSONArray arr;
+private JSONObject strRoot;
 
 private LinearLayout.LayoutParams lparams;
 private LinearLayout.LayoutParams btnlparams;
 private LinearLayout layout;
-private Button setURL;
+private Button setDlURL;
 private EditText e;
-LinearLayout ll;
-TextView tv;
-Button btnTrad;
-TextView pValue;
-ProgressBar progressBar;
-View rootView;
+    private TextView dlIndicator;
+private Button btnDownload;
+private TextView pValue;
+private ProgressBar progressBar;
+private View rootView;
 
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -86,18 +75,20 @@ View rootView;
         btnlparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         btnlparams.gravity = Gravity.CENTER_HORIZONTAL;
 
-        btnTrad = new Button(getActivity());
-        btnTrad.setText("download");
-        btnTrad.setLayoutParams(btnlparams);
-        btnTrad.setBackground(getResources().getDrawable(R.drawable.button_states));
-        btnTrad.setOnClickListener(new View.OnClickListener() {
+        btnDownload = new Button(getActivity());
+        btnDownload.setText("download");
+        btnDownload.setLayoutParams(btnlparams);
+        btnDownload.setBackground(getResources().getDrawable(R.drawable.button_states));
+        btnDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                setDownloadURL(SettingsFragment.URL_Download);
                 new DownloadTask(getActivity(), myHttpURL).execute();
             }
         });
 
         layout = new LinearLayout(getActivity());
+        layout.setBackgroundColor(getResources().getColor(R.color.background_floating_material_light));
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setLayoutParams(lparams);
 
@@ -105,16 +96,43 @@ View rootView;
         e.setGravity(Gravity.CENTER_HORIZONTAL);
         e.setHint("input url here");
 
-        setURL = new Button(getActivity());
-        setURL.setBackground(getResources().getDrawable(R.drawable.button_states));
-        setURL.setGravity(Gravity.CENTER_HORIZONTAL);
-        setURL.setLayoutParams(btnlparams);
-        setURL.setText("connect");
-        setURL.setOnClickListener(new View.OnClickListener() {
+        LinearLayout.LayoutParams tvlparams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        tvlparams.gravity = Gravity.CENTER;
+
+        dlIndicator = new TextView(getActivity());
+        dlIndicator.setLayoutParams(tvlparams);
+
+        setDlURL = new Button(getActivity());
+        setDlURL.setLayoutParams(btnlparams);
+        setDlURL.setBackground(getResources().getDrawable(R.drawable.button_states));
+        setDlURL.setGravity(Gravity.CENTER_HORIZONTAL);
+        setDlURL.setText("connect");
+        setDlURL.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                myHttpURL = e.getText()+"";
-                Toast.makeText(getActivity(), "OK", Toast.LENGTH_SHORT).show();
+                //TODO:finish check if URL connection is ok and valid
+                myHttpURL = e.getText() + "";
+                //DL
+                try {
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    URL dlurl = new URL(myHttpURL);
+
+                    HttpURLConnection dlconnection = (HttpURLConnection) dlurl.openConnection();
+
+                    if (dlconnection.getResponseCode() == 200) {
+                        dlIndicator.setText("connected");
+                        dlIndicator.setBackgroundColor(Color.GREEN);
+                    } else {
+                        dlIndicator.setText(dlconnection.getResponseCode() + dlconnection.getResponseMessage());
+                        dlIndicator.setBackgroundColor(Color.RED);
+                    }
+
+                } catch (MalformedURLException e) {
+                    Toast.makeText(getActivity(), "error: " + e.toString(), Toast.LENGTH_SHORT).show();
+                } catch (IOException e) {
+                    Toast.makeText(getActivity(), "error: " + e.toString(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 
@@ -128,8 +146,9 @@ View rootView;
 
 
         layout.addView(e);
-        layout.addView(setURL);
-        layout.addView(btnTrad);
+        layout.addView(dlIndicator);
+        layout.addView(setDlURL);
+        layout.addView(btnDownload);
         layout.addView(progressBar);
         layout.addView(pValue);
 
@@ -137,7 +156,9 @@ View rootView;
         return rootView;
     }
 
-
+    public void setDownloadURL(String url){
+        this.myHttpURL = url;
+    }
 
     private class DownloadTask extends AsyncTask< Void, Integer, Void>{
         private boolean finished = false;
@@ -145,6 +166,7 @@ View rootView;
         private String URL;
         InputStream stream;
         InputStream stream1;
+        private Exception ex;
 
         public DownloadTask(Context ctx, String url){
             this.context = ctx;
@@ -162,7 +184,7 @@ View rootView;
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Toast.makeText(context, "downloading..", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "downloading learning elements..", Toast.LENGTH_SHORT).show();
             progressBar.setVisibility(View.VISIBLE);
         }
 
@@ -177,9 +199,10 @@ View rootView;
                 connection.setRequestMethod("GET");
                 connection.connect();
 
-                // IAN CODE
+                //=====================for informatron
                 HttpClient client = new DefaultHttpClient();
                 HttpClient client1 = new DefaultHttpClient();
+
                 try {
                     HttpGet req = new HttpGet(myUrl.toURI());
                     HttpResponse response = client.execute(req);
@@ -193,21 +216,17 @@ View rootView;
                 } catch (URISyntaxException e1) {
                     e1.printStackTrace();
                 }
+                //=====================for informatron
 
-
-
-                File rootDirectory = new File(Environment.getExternalStorageDirectory(), "My Pictures");
+                File rootDirectory = new File(Environment.getExternalStorageDirectory(), "lo7");
 
                 if(!rootDirectory.exists()){
-                        rootDirectory.mkdirs();
+                    rootDirectory.mkdir();
                 }
 
                 String nameOfFile = URLUtil.guessFileName(myHttpURL,null, MimeTypeMap.getFileExtensionFromUrl(myHttpURL));
                 File file = new File(rootDirectory,nameOfFile);
                 file.createNewFile();
-
-
-                //InputStream inputStream = connection.getInputStream();
 
                 FileOutputStream outputStream = new FileOutputStream(file);
 
@@ -215,8 +234,8 @@ View rootView;
                 byte[] buffer1 = new byte[1024];
                 long total = 0;
                 long currentBytes = 0;
-                int byteCount = 0;
-                int byteCount1 = 0;
+                int byteCount;
+                int byteCount1;
 
                 while((byteCount1 = stream1.read(buffer1))>0){
                     total += byteCount1;
@@ -228,7 +247,6 @@ View rootView;
                     outputStream.write(buffer, 0, byteCount);
                 }
 
-
                 outputStream.close();
 
                 Intent intent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
@@ -237,9 +255,11 @@ View rootView;
 
                 finished = true;
             } catch (MalformedURLException e) {
-                e.printStackTrace();
+                ex = e;
+                //Toast.makeText(context, "e: "+e.toString(), Toast.LENGTH_LONG).show();
             } catch (IOException e) {
-                e.printStackTrace();
+                ex = e;
+                //Toast.makeText(context, "e: "+e.toString(), Toast.LENGTH_LONG).show();
             }
         return null;
         }
@@ -252,6 +272,7 @@ View rootView;
             }
             else{
                 Toast.makeText(context, "download failed!", Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "ex: "+ex.toString(), Toast.LENGTH_LONG).show();
             }
 
         }

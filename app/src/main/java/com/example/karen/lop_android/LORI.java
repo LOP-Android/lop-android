@@ -64,7 +64,7 @@ public class LORI extends Fragment {
     };
 
 
-    public void setUrl(String url){
+    public void setLORIUrl(String url){
         this.URL = url;
     }
 
@@ -115,7 +115,7 @@ public class LORI extends Fragment {
         send.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setUrl(SettingsFragment.URLString);
+                setLORIUrl(SettingsFragment.URL_LORI);
                 sendLORI(loriAdapter.getJSONArray(), 123);
             }
         });

@@ -77,15 +77,12 @@ public class Page1Fragment extends Fragment {
 
         lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
 
-        gv = new GridView(getActivity());
-        gv.setVerticalScrollBarEnabled(true);
-        gv.setLayoutParams(lparams);
-
         sv = new ScrollView(getActivity());
         sv.setVerticalScrollBarEnabled(true);
         sv.setLayoutParams(lparams);
 
         ll = new LinearLayout(getActivity());
+        ll.setPadding(20,20,20,20);
         ll.setOrientation(LinearLayout.VERTICAL);
         ll.setLayoutParams(lparams);
         ll.setBackgroundColor(getResources().getColor(R.color.background_floating_material_light));
