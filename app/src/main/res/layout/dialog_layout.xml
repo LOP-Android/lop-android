@@ -8,25 +8,41 @@
     android:minWidth="300dp">
 
     <LinearLayout
+        android:gravity="center"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp">
 
-        <ImageView
+        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_launcher" />
+            android:id="@+id/paluyo"
+            android:background="@drawable/button_states"
+            android:text="back"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/up"
+            android:id="@+id/create_folder"
             android:background="@drawable/button_states"
-            android:text="Open File Manager"/>
+            android:text="+"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/delete_folder"
+            android:background="@drawable/button_states"
+            android:text="-"/>
 
 
     </LinearLayout>
+
+    <EditText
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/folder_name"
+        android:textColor="#123123"/>
 
     <TextView
         android:layout_width="wrap_content"

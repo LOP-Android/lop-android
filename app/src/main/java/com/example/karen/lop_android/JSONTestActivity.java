@@ -41,7 +41,7 @@ public class JSONTestActivity extends ActionBarActivity {
     TextView pValue;
     Button b;
     String urlTest="http://demos.tricksofit.com/files/json.php";
-    String urlIan="http://192.168.1.43:8080/InformatronYX/informatron/LO/availableLearningObjects";
+    String urlIan="http://192.168.1.39:8080/InformatronYX/informatron/user/login";
     String test = null;
     JSONObject strRoot;
     JSONArray arr;
@@ -75,9 +75,9 @@ public class JSONTestActivity extends ActionBarActivity {
             public void onClick(View v) {
                 //Toast.makeText(getApplicationContext(), (strRoot.toString()!=null)?strRoot.toString():"null", Toast.LENGTH_LONG).show();
 
-                Toast.makeText(getApplicationContext(), "fetching data from informatron..", Toast.LENGTH_SHORT).show();
-                new JSONParseTask().execute();
-                //Toast.makeText(getApplicationContext(), "hehe "+getJSONFromURL(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), "fetching data", Toast.LENGTH_SHORT).show();
+                //new JSONParseTask().execute();
+                Toast.makeText(getApplicationContext(), "hehe "+getJSONFromURL(), Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -89,14 +89,14 @@ public class JSONTestActivity extends ActionBarActivity {
 
         HttpResponse response;
         HttpClient myClient = new DefaultHttpClient();
-        HttpPost myConnection = new HttpPost(urlTest);
+        HttpPost myConnection = new HttpPost(urlIan);
 
         try {
             response = myClient.execute(myConnection);
             test = EntityUtils.toString(response.getEntity(), "UTF-8");
-            arr = new JSONArray(test);
+            Toast.makeText(getApplicationContext(), test, Toast.LENGTH_LONG).show();
+            arr = new JSONArray("["+test+"]");
             strRoot = arr.getJSONObject(0);
-            //finished = true;
 
         }
         catch (IOException e) {
@@ -106,10 +106,8 @@ public class JSONTestActivity extends ActionBarActivity {
             Toast.makeText(getApplicationContext(), "error2: "+e.toString(), Toast.LENGTH_LONG).show();
         }
 
-        //startProgressBar();
         return strRoot;
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -175,8 +173,7 @@ public class JSONTestActivity extends ActionBarActivity {
         @Override
         protected void onPostExecute(JSONObject jsonObject){
             pValue.setVisibility(View.INVISIBLE);
-            Toast.makeText(getApplicationContext(), strRoot.toString(), Toast.LENGTH_LONG).show();
-                //Toast.makeText(getApplicationContext(), jsonObject.toString(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), jsonObject.toString(), Toast.LENGTH_LONG).show();
                 /*if (jsonObject != null) {
                     id.setText(((jsonObject.optInt("id") + "") != null) ?"id: " + jsonObject.optString("id") : "null");
                 title.setText(((jsonObject.optString("title")) != null) ? "title: " + jsonObject.optString("title") : "null");

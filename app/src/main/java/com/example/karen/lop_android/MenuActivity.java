@@ -56,9 +56,9 @@ public class MenuActivity extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 switch (position) {
-                    case 0: startActivity(new Intent(MenuActivity.this, MyLibraryActivity.class));
-                            break;
-                            //addFragment(new MyLibraryFragment());break;
+                    case 0: //startActivity(new Intent(MenuActivity.this, MyLibraryActivity.class));
+                            //break;
+                            addFragment(new MyLibraryFragment());break;
                     case 1: setActionBarTitle("LOStore");
                             addFragment(new StoreFragment());break;
                     case 4: setActionBarTitle("Settings");
@@ -78,8 +78,7 @@ public class MenuActivity extends ActionBarActivity {
     @Override
     public void onBackPressed() {
         if(fragmentStack.empty()){
-            Intent intent = new Intent(MenuActivity.this, LoginActivity.class);
-            startActivity(intent);
+            super.onBackPressed();
         }
         else {
             if(fragmentStack.size() == 1){

@@ -45,13 +45,14 @@ public class Page1Fragment extends Fragment {
     VideoManager vm;
     AudioPlayer ap;
     WebManager wm;
+    ImageView image;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        vm = new VideoManager(getActivity(), Uri.parse(Environment.getExternalStorageDirectory().getPath() + "/lo7/vid/sample.mp4"));
+        //vm = new VideoManager(getActivity(), Uri.parse(Environment.getExternalStorageDirectory().getPath() + "/lo7/vid/sample.mp4"));
         try {
-            ap = new AudioPlayer(getActivity(), Uri.parse(Environment.getExternalStorageDirectory().getPath() + "/lo7/aud/samplemp3.mp3"));
+            ap = new AudioPlayer(getActivity(), Uri.parse(Environment.getExternalStorageDirectory().getPath() + "/lo7/mp3One.mp3"));
             ap.setButtonStates(getResources().getDrawable(R.drawable.button_states), getResources().getDrawable(R.drawable.button_states));
 
         }catch(IOException e){}
@@ -61,15 +62,17 @@ public class Page1Fragment extends Fragment {
         inflateViews();
         //ll2.addView(vm.getPlayer());
         ll.addView(tv);
-        //ll.addView(im);
+        ll.addView(im);
         //ll.addView(tv2);
         //ll.addView(im2);
-        ll.addView(wm.getInstance());
+        //ll.addView(wm.getInstance());
         ll.addView(ap.getPlayer());
 
         sv.addView(ll);
 
-        rootView = sv;
+        //rootView = sv;
+
+        rootView = LOPlayerActivity.mpa.getPageView();
         return rootView;
     }
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -98,7 +101,8 @@ public class Page1Fragment extends Fragment {
         tv.setTextSize(20);
 
         im = new ImageView(getActivity());
-        im.setImageDrawable(getResources().getDrawable(R.drawable.penguin));
+        im.setImageURI(Uri.parse(Environment.getExternalStorageDirectory().getPath() + "/lo7/picture1.png"));
+        //im.setImageDrawable(getResources().getDrawable(R.drawable.penguin));
 
         tv2 = new TextView(getActivity());
         tv2.setText("THIS IS PAGE 1");
@@ -107,16 +111,6 @@ public class Page1Fragment extends Fragment {
 
         im2 = new ImageView(getActivity());
         im2.setImageDrawable(getResources().getDrawable(R.drawable.penguin));
-
-        showVid = new Button(getActivity());
-        showVid.setText("play video");
-        showVid.setBackground(getResources().getDrawable(R.drawable.button_states));
-
-        showVid.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-            }
-        });
     }
 
 

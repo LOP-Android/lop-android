@@ -20,7 +20,7 @@ import java.io.InputStreamReader;
 /**
  * Created by hebi5 on 9/24/2015.
  */
-public class Register {
+public class Informatron {
     private String urlTest="http://hmkcode.appspot.com/jsonservlet";
     public String URL = "http://192.168.1.39:8080/InformatronYX/informatron/user/signup";
     boolean registerSuccess = false;
@@ -73,6 +73,45 @@ public class Register {
             Toast.makeText(ctx, "ERROR: "+e.toString(), Toast.LENGTH_LONG).show();
             Toast.makeText(ctx, "Registration Failed", Toast.LENGTH_LONG).show();
         };
+    }
+
+    public String loginUser(Context ctx, String username, String password){
+        InputStream inputStream = null;
+        String result = "";
+        try {
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("username", username);
+            jsonObject.put("password", password);
+
+
+            jsonRegister = jsonObject.toString();
+
+            HttpClient httpclient = new DefaultHttpClient();
+            HttpPost httpPost = new HttpPost(URL);
+
+            StringEntity se = new StringEntity(jsonRegister);
+            httpPost.setEntity(se);
+
+            httpPost.setHeader("Accept", "application/json");
+            httpPost.setHeader("Content-type", "application/json");
+
+            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+
+            HttpResponse httpResponse = httpclient.execute(httpPost);
+
+            inputStream = httpResponse.getEntity().getContent();
+            result = convertInputStreamToString(inputStream);
+
+            registerSuccess = true;
+        }
+        catch(IllegalStateException e){
+            Toast.makeText(ctx, "Cannot be null! \nERROR:"+e.toString(), Toast.LENGTH_LONG).show();
+        }
+        catch(Exception e){
+            Toast.makeText(ctx, "ERROR: "+e.toString(), Toast.LENGTH_LONG).show();
+        };
+        return result;
     }
 
     private static String convertInputStreamToString(InputStream inputStream) throws IOException {

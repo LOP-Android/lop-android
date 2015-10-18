@@ -7,17 +7,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 
 public class LOPlayerActivity extends ActionBarActivity {
 
     ViewPager viewPager;
+    public static int lo_number;
+    public static MyPagerAdapter mpa;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loplayer);
+
+        mpa = new MyPagerAdapter(getApplicationContext() ,getSupportFragmentManager(), LoginActivity.userSession.getLiableLOList().get(lo_number).getPage().size());
+
+        Toast.makeText(getApplicationContext(), LoginActivity.userSession.getLiableLOList().get(0).getPage().size()+"", Toast.LENGTH_LONG).show();
         viewPager = (ViewPager)findViewById(R.id.pager);
-        viewPager.setAdapter(new MyPagerAdapter(getSupportFragmentManager()));
+        viewPager.setAdapter(mpa);
         //viewPager.setPageTransformer(true, new DepthPageTransformer());
     }
 

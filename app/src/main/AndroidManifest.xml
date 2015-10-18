@@ -36,6 +36,10 @@
             android:name=".MyLibraryActivity"
             android:label="My Library" >
         </activity>
+        <activity
+            android:name=".TheActivityOfAwesome"
+            android:label="Hehe" >
+        </activity>
     </application>
 
 </manifest>

@@ -22,9 +22,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 
 public class LoginActivity extends Activity {
 
+    /**/
     private View.OnClickListener onClickLogin;
     private View.OnClickListener onClickRegstr;
 
@@ -42,13 +46,20 @@ public class LoginActivity extends Activity {
     private EditText lastName;
     private EditText email;
     private TextView registerBtn;
+    /**/
 
-    boolean userReg = false;
+    private boolean userReg = false;
     private Animation anim;
 
-    public Register r;
+    private Informatron r;
+    private String urlInformatron = "http://192.168.1.37:24119/InformatronYX/informatron/user/login";
+    public static UserSession userSession;
 
     //private String username:
+
+    public UserSession getUser(){
+        return this.userSession;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +73,7 @@ public class LoginActivity extends Activity {
         onClickRegstr = new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                r = new Register();
+                r = new Informatron();
                 //set on click registerBtn to post json to informatron
                 try {
                     r.setRegisterUrl(SettingsFragment.URL_Register);
@@ -121,6 +132,22 @@ public class LoginActivity extends Activity {
         //super.onBackPressed();
     }
 
+    private void getUserJSON(){
+
+    }
+
+    public boolean validateLoginJSON(JSONObject loginJSON) throws JSONException {
+        return ((loginJSON.optString("id"))!="null");
+    }
+
+    public String getUserId(JSONObject loginJSON) throws JSONException {
+        return (loginJSON.optString("id"));
+    }
+
+    public static UserSession getUserSession(){
+        return userSession;
+    }
+
     //creates submitBtn button
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void createSbmtButton(){
@@ -132,12 +159,85 @@ public class LoginActivity extends Activity {
         submitBtn.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
-                if(user.getText().toString().equals("admin") && pass.getText().toString().equals("admin")) {
-                    startActivity(intent);
-                }
-                else{
-                    Toast.makeText(getApplicationContext(), "Error: Incorrect username/password", Toast.LENGTH_SHORT).show();
+
+                //startActivity(new Intent(LoginActivity.this, MenuActivity.class));
+
+                try {
+                    r = new Informatron();
+                    r.setRegisterUrl(urlInformatron);
+                    //JSONObject theJson = new JSONObject(r.loginUser(getApplicationContext(), user.getText().toString(), pass.getText().toString()));
+                    JSONObject dummyJson = new JSONObject(" {\n" +
+                            "    \"id\": \"5621369344aea2994b852b66\",\n" +
+                            "    \"username\": \"princeniko\",\n" +
+                            "    \"password\": \"1234\",\n" +
+                            "    \"firstName\": \"Prince\",\n" +
+                            "    \"lastName\": \"Garces\",\n" +
+                            "    \"email\": \" prince.nikogarces@gmail.com\",\n" +
+                            "    \"lastLogin\": 1445018693655,\n" +
+                            "    \"lastLoginString\": \"10 17, 15\",\n" +
+                            "    \"lastDownloadDate\": null,\n" +
+                            "    \"lastDownloadId\": null,\n" +
+                            "    \"liableLearningObjects\": [\n" +
+                            "        {\n" +
+                            "            \"id\": \"56202874986cfb81a9ee3cf7\",\n" +
+                            "            \"title\": \"Test 3\",\n" +
+                            "            \"subject\": null,\n" +
+                            "            \"description\": null,\n" +
+                            "            \"downloads\": 0,\n" +
+                            "            \"uploadDate\": null,\n" +
+                            "            \"likes\": 0,\n" +
+                            "            \"sequence\": [\n" +
+                            "                [\n" +
+                            "                    {\n" +
+                            "                        \"title\": \"Picture 1\",\n" +
+                            "                        \"type\": \"image\",\n" +
+                            "                        \"fileExtension\": \".png\",\n" +
+                            "                        \"description\": null,\n" +
+                            "                        \"dateCreated\": null,\n" +
+                            "                        \"id\": \"picture1_1\"\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"title\": \"Music Sample 1\",\n" +
+                            "                        \"type\": \"music\",\n" +
+                            "                        \"fileExtension\": \".mp3\",\n" +
+                            "                        \"description\": null,\n" +
+                            "                        \"dateCreated\": null,\n" +
+                            "                        \"id\": \"mp3One.mp3\"\n" +
+                            "                    }\n" +
+                            "                ],\n" +
+                            "                [\n" +
+                            "                    {\n" +
+                            "                        \"title\": \"Picture 2\",\n" +
+                            "                        \"type\": \"image\",\n" +
+                            "                        \"fileExtension\": \".png\",\n" +
+                            "                        \"description\": null,\n" +
+                            "                        \"dateCreated\": null,\n" +
+                            "                        \"id\": \"picture1_2\"\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"title\": \"Music Sample 2\",\n" +
+                            "                        \"type\": \"music\",\n" +
+                            "                        \"fileExtension\": \".mp3\",\n" +
+                            "                        \"description\": null,\n" +
+                            "                        \"dateCreated\": null,\n" +
+                            "                        \"id\": \"mp3Two.mp3\"\n" +
+                            "                    }\n" +
+                            "                ]\n" +
+                            "            ],\n" +
+                            "            \"price\": 0\n" +
+                            "        }\n" +
+                            "\t]\n" +
+                            "}");
+                    //if(validateLoginJSON(theJson)){
+                        userSession = new UserSession(dummyJson);
+
+                        startActivity(new Intent(LoginActivity.this, MenuActivity.class));
+                    //}
+                    //else{
+                    //    Toast.makeText(getApplicationContext(), "Error: Incorrect username/password", Toast.LENGTH_SHORT).show();
+                    //}
+                } catch (JSONException e) {
+                    Toast.makeText(getApplicationContext(), "Error: "+e.toString(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -324,7 +424,7 @@ public class LoginActivity extends Activity {
                 layout.addView(pass);
                 layout.addView(submitBtn);
                 layout.addView(registerBtn);
-                //layout.addView(jsontest);
+                layout.addView(jsontest);
             }
 
             flag = true;

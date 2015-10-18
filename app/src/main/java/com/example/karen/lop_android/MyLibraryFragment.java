@@ -36,12 +36,32 @@ public class MyLibraryFragment extends Fragment {
     private ImageButton open;
     private Animation anim;
     private LinearLayout ll;
-    private String[] loList = {
-            "Sample LO"};
+    private ArrayList<String> loTitleList = new ArrayList<>();
+
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+        for(int i=0;i<LoginActivity.userSession.getLiableLOList().size(); i++){
+            loTitleList.add(LoginActivity.userSession.getLiableLOList().get(i).getTitle());
+        }
+
+        int lo_number = 0;
+
+        for(int p=0;p< LoginActivity.userSession.getLiableLOList().get(lo_number).getPage().size();p++){
+
+            LearningElement[] page = LoginActivity.userSession.getLiableLOList().get(lo_number).getPage().get(p);
+
+            for(int i=0;i<page.length;i++){
+
+                LearningElement element =  page[i];
+                String fileExtension = element.getFileExtension();
+                String name = element.getId();
+
+                //Toast.makeText(getActivity(), "page: "+p+" filename: "+name+fileExtension, Toast.LENGTH_SHORT).show();
+           }
+        }
 
         inflateViews();
 
@@ -50,6 +70,7 @@ public class MyLibraryFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 switch(position){
                     case 0: Intent i = new Intent(getActivity(), LOPlayerActivity.class);
+                            LOPlayerActivity.lo_number = 0;
                             startActivity(i);
                 }
             }
@@ -74,7 +95,7 @@ public class MyLibraryFragment extends Fragment {
         lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
         lv = new ListView(getActivity());
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.folder_list, R.id.folder_dir_txt, loList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.folder_list, R.id.folder_dir_txt, loTitleList);
         lv.setAdapter(adapter);
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -108,7 +129,7 @@ public class MyLibraryFragment extends Fragment {
         ll.addView(open);
         ll.addView(lv);
 
-        searchBar.addTextChangedListener(new TextWatcher() {
+        /*searchBar.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -128,7 +149,7 @@ public class MyLibraryFragment extends Fragment {
             @Override
             public void afterTextChanged(Editable s) {}
 
-        });
+        });*/
 
     }
 }
