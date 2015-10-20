@@ -40,7 +40,7 @@ public class MenuActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().setTitle("Welcome!");
+        getSupportActionBar().setTitle("Welcome, "+LoginActivity.userSession.getFirstName()+" "+LoginActivity.userSession.getLastName());
 
         setContentView(R.layout.activity_menu);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -56,8 +56,7 @@ public class MenuActivity extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 switch (position) {
-                    case 0: //startActivity(new Intent(MenuActivity.this, MyLibraryActivity.class));
-                            //break;
+                    case 0: setActionBarTitle("My Library");
                             addFragment(new MyLibraryFragment());break;
                     case 1: setActionBarTitle("LOStore");
                             addFragment(new StoreFragment());break;

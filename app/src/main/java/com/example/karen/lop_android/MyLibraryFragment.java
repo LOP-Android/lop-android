@@ -2,25 +2,34 @@ package com.example.karen.lop_android;
 
 import android.annotation.TargetApi;
 import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.TwoLineListItem;
 
 import java.util.ArrayList;
 
@@ -35,19 +44,18 @@ public class MyLibraryFragment extends Fragment {
     private ListView lv;
     private ImageButton open;
     private Animation anim;
+    private String rootFolderLO = "lo7";
     private LinearLayout ll;
     private ArrayList<String> loTitleList = new ArrayList<>();
+    private ArrayList<String> loSubtitleList = new ArrayList<>();
 
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        createTitleList();
 
-        for(int i=0;i<LoginActivity.userSession.getLiableLOList().size(); i++){
-            loTitleList.add(LoginActivity.userSession.getLiableLOList().get(i).getTitle());
-        }
-
-        int lo_number = 0;
+        final int lo_number = 0;
 
         for(int p=0;p< LoginActivity.userSession.getLiableLOList().get(lo_number).getPage().size();p++){
 
@@ -68,16 +76,28 @@ public class MyLibraryFragment extends Fragment {
         lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch(position){
-                    case 0: Intent i = new Intent(getActivity(), LOPlayerActivity.class);
-                            LOPlayerActivity.lo_number = 0;
-                            startActivity(i);
+                int loListCount = LoginActivity.userSession.getLiableLOList().size();
+                for(int i = 0; i < loListCount;i++) {
+                    if(position == i){
+                        startActivity(new Intent(getActivity(), LOPlayerActivity.class));
+                        LOPlayerActivity.lo_number = i;
+                        break;
+                    }
                 }
             }
         });
 
         rootView = ll;
+        setHasOptionsMenu(true);
         return rootView;
+    }
+
+    public void createTitleList(){
+
+        for(int i=0;i<LoginActivity.userSession.getLiableLOList().size(); i++){
+            loTitleList.add(LoginActivity.userSession.getLiableLOList().get(i).getTitle());
+            loSubtitleList.add(Environment.getExternalStorageDirectory()+"/"+rootFolderLO+"/"+LoginActivity.userSession.getLiableLOList().get(i).getTitle());
+       }
     }
 
     public void addFragment(Fragment fragment){
@@ -95,38 +115,19 @@ public class MyLibraryFragment extends Fragment {
         lparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.FILL_PARENT, LinearLayout.LayoutParams.FILL_PARENT);
         lv = new ListView(getActivity());
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), R.layout.folder_list, R.id.folder_dir_txt, loTitleList);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, loTitleList);
         lv.setAdapter(adapter);
-        lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                lv.getChildAt(position).startAnimation(anim);
-            }
-        });
+        lv.setSelector(getResources().getDrawable(R.drawable.custom_list_selector));
 
         searchBar = new EditText(getActivity());
         searchBar.setHint("Search for LOs");
 
         ll = new LinearLayout(getActivity());
         ll.setLayoutParams(lparams);
-        ll.setBackgroundColor(Color.WHITE);
+        ll.setBackgroundColor(getResources().getColor(R.color.background_floating_material_light));
         ll.setOrientation(LinearLayout.VERTICAL);
 
-        LinearLayout.LayoutParams btnlparams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        btnlparams.gravity = Gravity.CENTER_HORIZONTAL;
-
-        open = new ImageButton(getActivity());
-        open.setBackground(getResources().getDrawable(R.drawable.button_states));
-        open.setLayoutParams(btnlparams);
-        open.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(getActivity(), MyLibraryActivity.class));
-            }
-        });
-
         ll.addView(searchBar);
-        ll.addView(open);
         ll.addView(lv);
 
         /*searchBar.addTextChangedListener(new TextWatcher() {
@@ -151,5 +152,24 @@ public class MyLibraryFragment extends Fragment {
 
         });*/
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_library, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.action_folders:
+                MyDialog myDialog = new MyDialog();
+                myDialog.show(getActivity().getFragmentManager(), "Folders");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

@@ -1,32 +1,254 @@
 package com.example.karen.lop_android;
 
+import android.animation.LayoutTransition;
+import android.app.Fragment;
+import android.content.Context;
+import android.net.Uri;
+import android.os.Environment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStream;
 
 
 public class LOPlayerActivity extends ActionBarActivity {
 
-    ViewPager viewPager;
+    private boolean flagVideo;
+    private String folder_path = "lo7";
     public static int lo_number;
-    public static MyPagerAdapter mpa;
+    private int currentPage = 0;
+    private ScrollView scrollView;
+    private LinearLayout pageContainer;
+    private ImageButton forward;
+    private ImageButton back;
+    private String loName;
+    private ImageButton evaluate;
+
+    private int pageCount = LoginActivity.userSession.getLiableLOList().get(lo_number).getPage().size();
+    private LinearLayout[] layouts = new LinearLayout[pageCount];
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loplayer);
+        loName = LoginActivity.userSession.getLiableLOList().get(lo_number).getTitle();
+        scrollView = new ScrollView(this);
+        scrollView.setVerticalScrollBarEnabled(true);
+        scrollView.setLayoutTransition(new LayoutTransition());
+        scrollView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
+        pageContainer = (LinearLayout)findViewById(R.id.pageContainer);
+        getSupportActionBar().setTitle(loName);
+        evaluate = (ImageButton)findViewById(R.id.evaluate);
+        evaluate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addFragment(new LORIFragment());
+            }
+        });
 
-        mpa = new MyPagerAdapter(getApplicationContext() ,getSupportFragmentManager(), LoginActivity.userSession.getLiableLOList().get(lo_number).getPage().size());
 
-        Toast.makeText(getApplicationContext(), LoginActivity.userSession.getLiableLOList().get(0).getPage().size()+"", Toast.LENGTH_LONG).show();
-        viewPager = (ViewPager)findViewById(R.id.pager);
-        viewPager.setAdapter(mpa);
-        //viewPager.setPageTransformer(true, new DepthPageTransformer());
+        pageContainer.setOnTouchListener(new OnSwipeTouchListener(this){
+            @Override
+            public void onSwipeLeft() {
+                if(currentPage<pageCount-1){
+                    if(flagVideo){
+                        currentPage++;
+                        pageContainer.removeAllViews();
+                        pageContainer.addView(layouts[currentPage]);
+                    }
+                    else{
+                        currentPage++;
+                        scrollView.removeAllViews();
+                        scrollView.addView(layouts[currentPage]);
+                    }
+                }
+            }
+
+            @Override
+            public void onSwipeRight() {
+                if(currentPage>0){
+                    if(flagVideo){
+                        currentPage--;
+                        pageContainer.removeAllViews();
+                        pageContainer.addView(layouts[currentPage]);
+                    }
+                    else{
+                        currentPage--;
+                        scrollView.removeAllViews();
+                        scrollView.addView(layouts[currentPage]);
+                    }
+                }
+            }
+        });
+
+        scrollView.setOnTouchListener(new OnSwipeTouchListener(this){
+            @Override
+            public void onSwipeLeft() {
+                if(currentPage<pageCount-1){
+                    if(flagVideo){
+                        currentPage++;
+                        pageContainer.removeAllViews();
+                        pageContainer.addView(layouts[currentPage]);
+                    }
+                    else{
+                        currentPage++;
+                        scrollView.removeAllViews();
+                        scrollView.addView(layouts[currentPage]);
+                    }
+                }
+            }
+
+            @Override
+            public void onSwipeRight() {
+                if(currentPage>0){
+                    if(flagVideo){
+                        currentPage--;
+                        pageContainer.removeAllViews();
+                        pageContainer.addView(layouts[currentPage]);
+                    }
+                    else{
+                        currentPage--;
+                        scrollView.removeAllViews();
+                        scrollView.addView(layouts[currentPage]);
+                    }
+                }
+            }
+        });
+
+        forward = (ImageButton)findViewById(R.id.forward);
+        forward.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(currentPage<pageCount-1){
+                    if(flagVideo){
+                        currentPage++;
+                        pageContainer.removeAllViews();
+                        pageContainer.addView(layouts[currentPage]);
+                    }
+                    else{
+                        currentPage++;
+                        scrollView.removeAllViews();
+                        scrollView.addView(layouts[currentPage]);
+                    }
+
+                }
+            }
+        });
+        back = (ImageButton)findViewById(R.id.back);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(currentPage>0){
+                    if(flagVideo){
+                        currentPage--;
+                        pageContainer.removeAllViews();
+                        pageContainer.addView(layouts[currentPage]);
+                    }
+                    else{
+                        currentPage--;
+                        scrollView.removeAllViews();
+                        scrollView.addView(layouts[currentPage]);
+                    }
+                }
+            }
+        });
+        initLayouts();
+        addViewsToLayout();
+
+        if(flagVideo){
+            pageContainer.addView(layouts[currentPage]);
+        }else{
+            scrollView.addView(layouts[currentPage]);
+            pageContainer.addView(scrollView);
+        }
+    }
+
+    public void addFragment(Fragment fragment){
+        getFragmentManager()
+                .beginTransaction()
+                .add(R.id.fragment_container, fragment)
+                .commit();
+    }
+
+    public void initLayouts(){
+        for(int i=0;i<pageCount;i++){
+            layouts[i] = new LinearLayout(this);
+            layouts[i].setOrientation(LinearLayout.VERTICAL);
+        }
+    }
+
+    public void addViewsToLayout(){
+        for(int p=0;p< pageCount;p++){
+
+            LearningElement[] learningElements = LoginActivity.userSession.getLiableLOList().get(lo_number).getPage().get(p);
+
+            for(int i=0;i<learningElements.length;i++){
+
+                LearningElement element =  learningElements[i];
+                String fileExtension = element.getFileExtension();
+                String name = element.getId();
+
+                switch(fileExtension){
+                    case ".txt":
+                        TextView tv = new TextView(this);
+                        File file = new File(Environment.getExternalStorageDirectory().getPath() + "/"+folder_path+"/"+ loName+"/"+ name + fileExtension);
+                        StringBuilder text = new StringBuilder();
+                        try {
+                            BufferedReader br = new BufferedReader(new FileReader(file));
+                            String line;
+                            while ((line = br.readLine()) != null) {
+                                text.append(line);
+                                text.append('\n');
+                            }
+                            br.close();
+                        }
+                        catch (IOException e) {
+                            //You'll need to add proper error handling here
+                        }
+                        tv.setText(text);
+                        layouts[p].addView(tv);
+                        break;
+                    case ".png":
+                        ImageView im = new ImageView(this);
+                        im.setImageURI(Uri.parse(Environment.getExternalStorageDirectory().getPath() + "/"+folder_path+"/"+ loName+"/"+ name + fileExtension));
+                        layouts[p].addView(im);
+                        break;
+                    case ".mp3":
+                        try {
+                            AudioPlayer ap = new AudioPlayer(this, Uri.parse(Environment.getExternalStorageDirectory().getPath() + "/"+folder_path+"/"+ loName+"/"+name));
+                            ap.setButtonStates(getResources().getDrawable(R.drawable.button_states), getResources().getDrawable(R.drawable.button_states));
+                            layouts[p].addView(ap.getPlayer());
+                        }catch(IOException e){}
+                        break;
+                    case ".mp4":
+                        VideoManager vm = new VideoManager(this, Uri.parse(Environment.getExternalStorageDirectory().getPath() + "/"+folder_path+"/"+ loName+"/"+name+fileExtension));
+                        flagVideo = true;
+                        layouts[p].addView(vm.getPlayer());
+                        break;
+                }
+            }
+        }
     }
 
 
@@ -54,78 +276,70 @@ public class LOPlayerActivity extends ActionBarActivity {
     }
 }
 
-class DepthPageTransformer implements ViewPager.PageTransformer {
-    private static final float MIN_SCALE = 0.75f;
+class OnSwipeTouchListener implements View.OnTouchListener {
 
-    public void transformPage(View view, float position) {
-        int pageWidth = view.getWidth();
+    private final GestureDetector gestureDetector;
 
-        if (position < -1) { // [-Infinity,-1)
-            // This page is way off-screen to the left.
-            view.setAlpha(0);
+    public OnSwipeTouchListener (Context ctx){
+        gestureDetector = new GestureDetector(ctx, new GestureListener());
+    }
 
-        } else if (position <= 0) { // [-1,0]
-            // Use the default slide transition when moving to the left page
-            view.setAlpha(1);
-            view.setTranslationX(0);
-            view.setScaleX(1);
-            view.setScaleY(1);
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        return gestureDetector.onTouchEvent(event);
+    }
 
-        } else if (position <= 1) { // (0,1]
-            // Fade the page out.
-            view.setAlpha(1 - position);
+    private final class GestureListener extends GestureDetector.SimpleOnGestureListener {
 
-            // Counteract the default slide transition
-            view.setTranslationX(pageWidth * -position);
+        private static final int SWIPE_THRESHOLD = 100;
+        private static final int SWIPE_VELOCITY_THRESHOLD = 100;
 
-            // Scale the page down (between MIN_SCALE and 1)
-            float scaleFactor = MIN_SCALE
-                    + (1 - MIN_SCALE) * (1 - Math.abs(position));
-            view.setScaleX(scaleFactor);
-            view.setScaleY(scaleFactor);
+        @Override
+        public boolean onDown(MotionEvent e) {
+            return true;
+        }
 
-        } else { // (1,+Infinity]
-            // This page is way off-screen to the right.
-            view.setAlpha(0);
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            boolean result = false;
+            try {
+                float diffY = e2.getY() - e1.getY();
+                float diffX = e2.getX() - e1.getX();
+                if (Math.abs(diffX) > Math.abs(diffY)) {
+                    if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                        if (diffX > 0) {
+                            onSwipeRight();
+                        } else {
+                            onSwipeLeft();
+                        }
+                    }
+                    result = true;
+                }
+                else if (Math.abs(diffY) > SWIPE_THRESHOLD && Math.abs(velocityY) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (diffY > 0) {
+                        onSwipeBottom();
+                    } else {
+                        onSwipeTop();
+                    }
+                }
+                result = true;
+
+            } catch (Exception exception) {
+                exception.printStackTrace();
+            }
+            return result;
         }
     }
-}
 
-class ZoomOutPageTransformer implements ViewPager.PageTransformer {
-    private static final float MIN_SCALE = 0.85f;
-    private static final float MIN_ALPHA = 0.5f;
+    public void onSwipeRight() {
+    }
 
-    public void transformPage(View view, float position) {
-        int pageWidth = view.getWidth();
-        int pageHeight = view.getHeight();
+    public void onSwipeLeft() {
+    }
 
-        if (position < -1) { // [-Infinity,-1)
-            // This page is way off-screen to the left.
-            view.setAlpha(0);
+    public void onSwipeTop() {
+    }
 
-        } else if (position <= 1) { // [-1,1]
-            // Modify the default slide transition to shrink the page as well
-            float scaleFactor = Math.max(MIN_SCALE, 1 - Math.abs(position));
-            float vertMargin = pageHeight * (1 - scaleFactor) / 2;
-            float horzMargin = pageWidth * (1 - scaleFactor) / 2;
-            if (position < 0) {
-                view.setTranslationX(horzMargin - vertMargin / 2);
-            } else {
-                view.setTranslationX(-horzMargin + vertMargin / 2);
-            }
-
-            // Scale the page down (between MIN_SCALE and 1)
-            view.setScaleX(scaleFactor);
-            view.setScaleY(scaleFactor);
-
-            // Fade the page relative to its size.
-            view.setAlpha(MIN_ALPHA +
-                    (scaleFactor - MIN_SCALE) /
-                            (1 - MIN_SCALE) * (1 - MIN_ALPHA));
-
-        } else { // (1,+Infinity]
-            // This page is way off-screen to the right.
-            view.setAlpha(0);
-        }
+    public void onSwipeBottom() {
     }
 }

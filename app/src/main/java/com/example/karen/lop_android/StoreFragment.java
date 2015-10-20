@@ -59,9 +59,8 @@ public class StoreFragment extends MyLibraryFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 lv.getChildAt(position).startAnimation(anim);
                 switch(position) {
-                    case 0: MenuActivity.currentFrag = new DialogFragmentTestFragment();
+                    case 0: MenuActivity.currentFrag = new DownloadLOFragment();
                             addFragment(MenuActivity.currentFrag);break;
-                        //startActivity(new Intent(getActivity(), DialogFragmentTestFragment.class));
                 }
 
             }

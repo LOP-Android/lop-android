@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.method.PasswordTransformationMethod;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,7 +53,7 @@ public class LoginActivity extends Activity {
     private Animation anim;
 
     private Informatron r;
-    private String urlInformatron = "http://192.168.1.37:24119/InformatronYX/informatron/user/login";
+    private String urlInformatron = "http://172.31.11.32:24119/InformatronYX/informatron/user/login";
     public static UserSession userSession;
 
     //private String username:
@@ -194,10 +195,58 @@ public class LoginActivity extends Activity {
                             "                        \"fileExtension\": \".png\",\n" +
                             "                        \"description\": null,\n" +
                             "                        \"dateCreated\": null,\n" +
+                            "                        \"id\": \"picture1\"\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"title\": \"Picture 2\",\n" +
+                            "                        \"type\": \"music\",\n" +
+                            "                        \"fileExtension\": \".png\",\n" +
+                            "                        \"description\": null,\n" +
+                            "                        \"dateCreated\": null,\n" +
+                            "                        \"id\": \"picture2\"\n" +
+                            "                    },\n" +
+                            "                    {\n" +
+                            "                        \"title\": \"Picture 3\",\n" +
+                            "                        \"type\": \"music\",\n" +
+                            "                        \"fileExtension\": \".png\",\n" +
+                            "                        \"description\": null,\n" +
+                            "                        \"dateCreated\": null,\n" +
+                            "                        \"id\": \"picture3\"\n" +
+                            "                    }\n" +
+                            "                ],\n" +
+                            "\t\t[\n" +
+                            "                    {\n" +
+                            "                        \"title\": \"Picture 1_1\",\n" +
+                            "                        \"type\": \"image\",\n" +
+                            "                        \"fileExtension\": \".png\",\n" +
+                            "                        \"description\": null,\n" +
+                            "                        \"dateCreated\": null,\n" +
                             "                        \"id\": \"picture1_1\"\n" +
                             "                    },\n" +
                             "                    {\n" +
-                            "                        \"title\": \"Music Sample 1\",\n" +
+                            "                        \"title\": \"Picture 1_2\",\n" +
+                            "                        \"type\": \"music\",\n" +
+                            "                        \"fileExtension\": \".png\",\n" +
+                            "                        \"description\": null,\n" +
+                            "                        \"dateCreated\": null,\n" +
+                            "                        \"id\": \"picture1_2\"\n" +
+                            "                    }\n" +
+                            "                ]\n" +
+                            "            ],\n" +
+                            "            \"price\": 0\n" +
+                            "        },\n" +
+                            "\t{\n" +
+                            "            \"id\": \"2\",\n" +
+                            "            \"title\": \"Test 2\",\n" +
+                            "            \"subject\": null,\n" +
+                            "            \"description\": null,\n" +
+                            "            \"downloads\": 0,\n" +
+                            "            \"uploadDate\": null,\n" +
+                            "            \"likes\": 0,\n" +
+                            "            \"sequence\": [\n" +
+                            "                [\n" +
+                            "                    {\n" +
+                            "                        \"title\": \"Music Sample1\",\n" +
                             "                        \"type\": \"music\",\n" +
                             "                        \"fileExtension\": \".mp3\",\n" +
                             "                        \"description\": null,\n" +
@@ -205,17 +254,9 @@ public class LoginActivity extends Activity {
                             "                        \"id\": \"mp3One.mp3\"\n" +
                             "                    }\n" +
                             "                ],\n" +
-                            "                [\n" +
+                            "\t\t[\n" +
                             "                    {\n" +
-                            "                        \"title\": \"Picture 2\",\n" +
-                            "                        \"type\": \"image\",\n" +
-                            "                        \"fileExtension\": \".png\",\n" +
-                            "                        \"description\": null,\n" +
-                            "                        \"dateCreated\": null,\n" +
-                            "                        \"id\": \"picture1_2\"\n" +
-                            "                    },\n" +
-                            "                    {\n" +
-                            "                        \"title\": \"Music Sample 2\",\n" +
+                            "                        \"title\": \"Music Sample2\",\n" +
                             "                        \"type\": \"music\",\n" +
                             "                        \"fileExtension\": \".mp3\",\n" +
                             "                        \"description\": null,\n" +
@@ -225,9 +266,73 @@ public class LoginActivity extends Activity {
                             "                ]\n" +
                             "            ],\n" +
                             "            \"price\": 0\n" +
+                            "        },\n" +
+                            "\t{\n" +
+                            "            \"id\": \"3\",\n" +
+                            "            \"title\": \"Test 1\",\n" +
+                            "            \"subject\": null,\n" +
+                            "            \"description\": null,\n" +
+                            "            \"downloads\": 0,\n" +
+                            "            \"uploadDate\": null,\n" +
+                            "            \"likes\": 0,\n" +
+                            "            \"sequence\": [\n" +
+                            "                [\n" +
+                            "                    {\n" +
+                            "                        \"title\": \"Text 1\",\n" +
+                            "                        \"type\": \"music\",\n" +
+                            "                        \"fileExtension\": \".txt\",\n" +
+                            "                        \"description\": null,\n" +
+                            "                        \"dateCreated\": null,\n" +
+                            "                        \"id\": \"text1\"\n" +
+                            "                    }\n" +
+                            "                ],\n" +
+                            "\t\t[\n" +
+                            "                    {\n" +
+                            "                        \"title\": \"Text 2\",\n" +
+                            "                        \"type\": \"music\",\n" +
+                            "                        \"fileExtension\": \".txt\",\n" +
+                            "                        \"description\": null,\n" +
+                            "                        \"dateCreated\": null,\n" +
+                            "                        \"id\": \"text2\"\n" +
+                            "                    }\n" +
+                            "                ]\n" +
+                            "            ],\n" +
+                            "            \"price\": 0\n" +
+                            "        },\n" +
+                            "\t{\n" +
+                            "            \"id\": \"3\",\n" +
+                            "            \"title\": \"Test 4\",\n" +
+                            "            \"subject\": null,\n" +
+                            "            \"description\": null,\n" +
+                            "            \"downloads\": 0,\n" +
+                            "            \"uploadDate\": null,\n" +
+                            "            \"likes\": 0,\n" +
+                            "            \"sequence\": [\n" +
+                            "                [\n" +
+                            "                    {\n" +
+                            "                        \"title\": \"Video 1\",\n" +
+                            "                        \"type\": \"music\",\n" +
+                            "                        \"fileExtension\": \".mp4\",\n" +
+                            "                        \"description\": null,\n" +
+                            "                        \"dateCreated\": null,\n" +
+                            "                        \"id\": \"sampleVideoOne\"\n" +
+                            "                    }\n" +
+                            "                ],\n" +
+                            "\t\t[\n" +
+                            "                    {\n" +
+                            "                        \"title\": \"Video 2\",\n" +
+                            "                        \"type\": \"music\",\n" +
+                            "                        \"fileExtension\": \".mp4\",\n" +
+                            "                        \"description\": null,\n" +
+                            "                        \"dateCreated\": null,\n" +
+                            "                        \"id\": \"sampleVideoTwo\"\n" +
+                            "                    }\n" +
+                            "                ]\n" +
+                            "            ],\n" +
+                            "            \"price\": 0\n" +
                             "        }\n" +
                             "\t]\n" +
-                            "}");
+                            "}\n");
                     //if(validateLoginJSON(theJson)){
                         userSession = new UserSession(dummyJson);
 
@@ -398,6 +503,7 @@ public class LoginActivity extends Activity {
             //for password text area
             pass = new EditText(this);
             pass.setLayoutParams(etlparams2);
+            pass.setTransformationMethod(PasswordTransformationMethod.getInstance());
             pass.setBackground(getResources().getDrawable(R.drawable.edittext_states));
             pass.setHint("PASSWORD");
             pass.setTextSize(15);
@@ -424,7 +530,7 @@ public class LoginActivity extends Activity {
                 layout.addView(pass);
                 layout.addView(submitBtn);
                 layout.addView(registerBtn);
-                layout.addView(jsontest);
+                //layout.addView(jsontest);
             }
 
             flag = true;

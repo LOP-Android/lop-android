@@ -1,7 +1,7 @@
 package com.example.karen.lop_android;
 
 import android.annotation.TargetApi;
-import android.support.v4.app.Fragment;
+import android.app.Fragment;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,8 +37,8 @@ import java.io.InputStreamReader;
 /**
  * Created by hebi5 on 10/12/2015.
  */
-public class LORI extends Fragment {
-    public String URL = "http://192.168.254.102:8080/InformatronYX/informatron/lori/submit";
+public class LORIFragment extends Fragment {
+    public String URL = "http://172.31.11.32:24119/InformatronYX/informatron/lori/submit";
     LinearLayout.LayoutParams lparams;
     LinearLayout.LayoutParams btnlparams;
     LinearLayout.LayoutParams elvParams;
@@ -130,10 +130,10 @@ public class LORI extends Fragment {
         String result = "";
         try {
             JSONObject jsonObject = new JSONObject();
-            jsonObject.put("id", 1234);
+            jsonObject.put("id", 12345);
             jsonObject.put("evaluation", jsonArray);
             jsonObject.put("learningObjectId", 123);
-            jsonObject.put("subject", "boto");
+            jsonObject.put("subject", "hehe");
             jsonObject.put("errorList", null);
             jsonObject.put("loris", null);
             jsonObject.put("reviewId", 69);

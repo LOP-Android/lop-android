@@ -57,12 +57,11 @@ public class MyDialog extends DialogFragment {
         createFolder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "ni sud", Toast.LENGTH_LONG).show();
 
                 File rootDirectory = new File(Environment.getExternalStorageDirectory(), folderName.getText().toString());
 
                 if(!rootDirectory.exists()){
-                    Toast.makeText(getActivity(),rootDirectory.mkdir()+"",Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(),(rootDirectory.mkdir())?"successful":"failed",Toast.LENGTH_LONG).show();
                 }
             }
         });

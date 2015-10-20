@@ -49,22 +49,22 @@ import java.util.ArrayList;
  */
 public class DownloadLOFragment extends Fragment {
 
-public static String myHttpURL = "http://www.noiseaddicts.com/samples_1w72b820/4245.mp3";
-private String downloadLoURL = "http://192.168.1.37:24119/InformatronYX/informatron/connect/download/le/";
-private JSONArray arr;
-private JSONObject strRoot;
+public static String myHttpURL = "";
+private String downloadLoURL = "http://172.31.11.32:24119/InformatronYX/informatron/connect/download/le/";
+private String rootFolderLO = "lo7";
 
 private LinearLayout.LayoutParams lparams;
 private LinearLayout.LayoutParams btnlparams;
 private LinearLayout layout;
 private Button setDlURL;
 private EditText e;
-    private TextView dlIndicator;
+private TextView dlIndicator;
 private Button btnDownload;
 private TextView pValue;
 private ProgressBar progressBar;
 private View rootView;
-    private String fileExtension = "";
+private String loName = "";
+private String fileExtension = "";
 
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
@@ -85,7 +85,7 @@ private View rootView;
         btnDownload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                downloadLO(4);
+                downloadLO(0);
             }
         });
 
@@ -93,53 +93,6 @@ private View rootView;
         layout.setBackgroundColor(getResources().getColor(R.color.background_floating_material_light));
         layout.setOrientation(LinearLayout.VERTICAL);
         layout.setLayoutParams(lparams);
-
-        e = new EditText(getActivity());
-        e.setGravity(Gravity.CENTER_HORIZONTAL);
-        e.setHint("input url here");
-
-        LinearLayout.LayoutParams tvlparams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        tvlparams.gravity = Gravity.CENTER;
-
-        dlIndicator = new TextView(getActivity());
-        dlIndicator.setLayoutParams(tvlparams);
-
-        setDlURL = new Button(getActivity());
-        setDlURL.setLayoutParams(btnlparams);
-        setDlURL.setBackground(getResources().getDrawable(R.drawable.button_states));
-        setDlURL.setGravity(Gravity.CENTER_HORIZONTAL);
-        setDlURL.setText("connect");
-        setDlURL.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //TODO:finish check if URL connection is ok and valid
-                //e.setText(downloadLoURL+LoginActivity.userSession.getId()+"/"+LoginActivity.userSession.getLiableLOList().get(1).getId()+"/"+LoginActivity.userSession.getLiableLOList().get(1).getElementInPage(0).getId());
-                myHttpURL = e.getText() + "";
-                //DL
-                try {
-                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-                    StrictMode.setThreadPolicy(policy);
-                    //Toast.makeText(getActivity(), downloadLoURL+LoginActivity.userSession.getId()+"/"+LoginActivity.userSession.getLiableLOList().get(1)+"/mp3One", Toast.LENGTH_LONG).show();
-                    URL dlurl = new URL(myHttpURL);
-                    //Toast.makeText(getActivity(), downloadLoURL+new LoginActivity().getUser().getId()+"/"+new LoginActivity().getUser().getLiableLOList().get(0)+"", Toast.LENGTH_LONG).show();
-
-                    HttpURLConnection dlconnection = (HttpURLConnection) dlurl.openConnection();
-
-                    if (dlconnection.getResponseCode() == 200) {
-                        dlIndicator.setText("connected");
-                        dlIndicator.setBackgroundColor(Color.GREEN);
-                    } else {
-                        dlIndicator.setText(dlconnection.getResponseCode() + dlconnection.getResponseMessage());
-                        dlIndicator.setBackgroundColor(Color.RED);
-                    }
-
-                } catch (MalformedURLException e) {
-                    Toast.makeText(getActivity(), "error: " + e.toString(), Toast.LENGTH_SHORT).show();
-                } catch (IOException e) {
-                    Toast.makeText(getActivity(), "error: " + e.toString(), Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
 
         pValue = new TextView(getActivity());
         pValue.setGravity(Gravity.CENTER_HORIZONTAL);
@@ -149,10 +102,6 @@ private View rootView;
         progressBar.setPadding(50,100,50,0);
         progressBar.setVisibility(View.INVISIBLE);
 
-
-        layout.addView(e);
-        layout.addView(dlIndicator);
-        layout.addView(setDlURL);
         layout.addView(btnDownload);
         layout.addView(progressBar);
         layout.addView(pValue);
@@ -162,6 +111,8 @@ private View rootView;
     }
 
     public void downloadLO(int lo_number){
+        loName = LoginActivity.userSession.getLiableLOList().get(lo_number).getTitle();
+
         for(int p=0;p< LoginActivity.userSession.getLiableLOList().get(lo_number).getPage().size();p++){
 
             LearningElement[] page = LoginActivity.userSession.getLiableLOList().get(lo_number).getPage().get(p);
@@ -219,36 +170,29 @@ private View rootView;
             try {
                 URL myUrl = new URL(this.URL);
 
-                /*HttpURLConnection connection = (HttpURLConnection)myUrl.openConnection();
-                connection.setDoOutput(true);
-                connection.setRequestMethod("GET");
-                connection.connect();*/
-
-                //=====================for informatron
                 HttpClient client = new DefaultHttpClient();
-                HttpClient client1 = new DefaultHttpClient();
 
                 try {
                     HttpGet req = new HttpGet(myUrl.toURI());
                     HttpResponse response = client.execute(req);
                     stream = response.getEntity().getContent();
-                    //response.getEntity().getContent().close();
 
                 } catch (URISyntaxException e1) {
                     e1.printStackTrace();
                 }
-                //=====================for informatron
 
-                File rootDirectory = new File(Environment.getExternalStorageDirectory(), "lo7");
+                File rootDirectory = new File(Environment.getExternalStorageDirectory()+"/"+rootFolderLO, loName);
 
                 if(!rootDirectory.exists()){
                     rootDirectory.mkdir();
                 }
 
                 String nameOfFile = URLUtil.guessFileName(myHttpURL,null, MimeTypeMap.getFileExtensionFromUrl(myHttpURL));
-                //filename = nameOfFile;
+
                 File file = new File(rootDirectory,fileName+fileExtension);
-                file.createNewFile();
+                if(!file.exists()) {
+                    file.createNewFile();
+                }
 
                 FileOutputStream outputStream = new FileOutputStream(file);
 
